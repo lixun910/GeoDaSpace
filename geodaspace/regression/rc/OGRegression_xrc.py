@@ -36,7 +36,7 @@ class xrcGMM_REGRESSION(wx.Frame):
         self.PostCreate(pre)
 
         # Define variables for the controls, bind event handlers
-        self.RegressionToolBar = xrc.XRCCTRL(self, "RegressionToolBar")
+        #self.RegressionToolBar = xrc.XRCCTRL(self, "RegressionToolBar")
         self.scroll = xrc.XRCCTRL(self, "scroll")
         self.Panel = xrc.XRCCTRL(self, "Panel")
         self.DATAFILE = xrc.XRCCTRL(self, "DATAFILE")
@@ -70,8 +70,8 @@ class xrcGMM_REGRESSION(wx.Frame):
         self.SEWhiteCheckBox = xrc.XRCCTRL(self, "SEWhiteCheckBox")
         self.SEHACCheckBox = xrc.XRCCTRL(self, "SEHACCheckBox")
         self.SEHETCheckBox = xrc.XRCCTRL(self, "SEHETCheckBox")
-        self.SaveButton = xrc.XRCCTRL(self, "SaveButton")
-        self.CloseButton = xrc.XRCCTRL(self, "CloseButton")
+        #self.SaveButton = xrc.XRCCTRL(self, "SaveButton")
+        #self.CloseButton = xrc.XRCCTRL(self, "CloseButton")
         self.RunButton = xrc.XRCCTRL(self, "RunButton")
 
 
@@ -156,43 +156,6 @@ def __init_resources():
     OGRegression_xrc = '''\
 <?xml version="1.0" ?><resource>
   <object class="wxFrame" name="GMM_REGRESSION">
-    <object class="wxToolBar" name="RegressionToolBar">
-      <object class="tool" name="ToolNewModel">
-        <bitmap stock_id="wxART_NEW"/>
-        <tooltip>Create New Model: Choose data file</tooltip>
-        <longhelp>Click to create a new model.</longhelp>
-      </object>
-      <object class="tool" name="ToolOpenModel">
-        <bitmap stock_id="wxART_FILE_OPEN"/>
-        <tooltip>Open Existing Model: Choose .mdl File</tooltip>
-      </object>
-      <object class="tool" name="ToolSaveModel">
-        <bitmap stock_id="wxART_FILE_SAVE"/>
-        <tooltip>Save Model...</tooltip>
-      </object>
-      <object class="tool" name="ToolSaveModelAs">
-        <bitmap stock_id="wxART_FILE_SAVE_AS"/>
-        <tooltip>Save Model As...</tooltip>
-      </object>
-      <object class="separator"/>
-      <object class="tool" name="ToolVariableSelector">
-        <bitmap stock_id="wxART_REPORT_VIEW"/>
-        <tooltip>Open the Variable List</tooltip>
-      </object>
-      <object class="tool" name="ToolResultsWindow">
-        <bitmap stock_id="wxART_HELP_PAGE"/>
-        <tooltip>Show the Results Window</tooltip>
-      </object>
-      <object class="separator"/>
-      <object class="tool" name="ToolAdvanced">
-        <bitmap>gear_png</bitmap>
-        <tooltip>Show Advanced Settings</tooltip>
-      </object>
-      <style>wxTB_FLAT|wxTB_HORIZONTAL</style>
-      <XRCED>
-        <assign_var>1</assign_var>
-      </XRCED>
-    </object>
     <object class="wxScrolledWindow" name="scroll">
       <object class="wxBoxSizer">
         <orient>wxVERTICAL</orient>
@@ -224,7 +187,6 @@ def __init_resources():
                               </object>
                               <object class="sizeritem">
                                 <object class="wxBitmapButton" name="DATA_INPUTFILE">
-                                  <size>15,13d</size>
                                   <bitmap stock_id="wxART_FILE_OPEN"/>
                                   <tooltip>Open data file...</tooltip>
                                   <style>wxBU_AUTODRAW|wxBU_EXACTFIT</style>
@@ -760,17 +722,6 @@ def __init_resources():
                               <border>5</border>
                               <size>5,5d</size>
                             </object>
-                            <object class="sizeritem">
-                              <object class="wxButton" name="SaveButton">
-                                <label>&amp;Sa&amp;ve</label>
-                                <hidden>1</hidden>
-                                <XRCED>
-                                  <assign_var>1</assign_var>
-                                </XRCED>
-                              </object>
-                              <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                              <border>2</border>
-                            </object>
                             <object class="spacer">
                               <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                               <border>5</border>
@@ -795,17 +746,6 @@ def __init_resources():
                               <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                               <border>5</border>
                               <size>5,5d</size>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxButton" name="CloseButton">
-                                <label>Close</label>
-                                <hidden>1</hidden>
-                                <XRCED>
-                                  <assign_var>1</assign_var>
-                                </XRCED>
-                              </object>
-                              <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                              <border>2</border>
                             </object>
                             <object class="sizeritem">
                               <object class="wxButton" name="RunButton">
@@ -837,7 +777,7 @@ def __init_resources():
                 <border>3</border>
               </object>
             </object>
-            <size>570,650</size>
+            <size>570,670</size>
             <XRCED>
               <assign_var>1</assign_var>
             </XRCED>
@@ -847,15 +787,16 @@ def __init_resources():
         </object>
       </object>
       <style>wxHSCROLL|wxVSCROLL</style>
+      <flag>wxALL|wxEXPAND</flag>
       <XRCED>
         <assign_var>1</assign_var>
       </XRCED>
     </object>
-    <size>570,650</size>
+    <size>570,690</size>
     <title>GeoDaSpace Regression</title>
     <centered>1</centered>
     <bg>#E8E8E8</bg>
-    <style>wxCAPTION|wxSYSTEM_MENU|wxRESIZE_BORDER|wxRESIZE_BOX|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX</style>
+    <style>wxCAPTION|wxSYSTEM_MENU|wxRESIZE_BORDER|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX</style>
   </object>
   <object class="wxFrame" name="TextWindow">
     <title>Results</title>
@@ -906,7 +847,6 @@ def __init_resources():
                   <style>normal</style>
                   <weight>normal</weight>
                   <underlined>0</underlined>
-                  <family>default</family>
                   <face>Courier New</face>
                 </font>
                 <style>wxTE_MULTILINE|wxTE_READONLY|wxTE_LINEWRAP</style>

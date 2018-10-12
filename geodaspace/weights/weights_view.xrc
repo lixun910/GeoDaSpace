@@ -750,7 +750,7 @@
     </object>
     <title>Weights Creation</title>
     <centered>1</centered>
-    <style>wxCAPTION|wxSYSTEM_MENU|wxRESIZE_BORDER|wxRESIZE_BOX|wxCLOSE_BOX</style>
+    <style>wxCAPTION|wxSYSTEM_MENU|wxRESIZE_BORDER|wxCLOSE_BOX</style>
     <XRCED>
       <events>EVT_CLOSE</events>
     </XRCED>
@@ -1104,7 +1104,7 @@
                 </object>
               </object>
               <cols>2</cols>
-              <rows>8</rows>
+              <rows>9</rows>
               <vgap>8</vgap>
               <hgap>5</hgap>
               <growablecols>1</growablecols>

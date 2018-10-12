@@ -700,7 +700,7 @@
     <title>GeoDaSpace Regression</title>
     <centered>1</centered>
     <bg>#E8E8E8</bg>
-    <style>wxCAPTION|wxSYSTEM_MENU|wxRESIZE_BORDER|wxRESIZE_BOX|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX</style>
+    <style>wxCAPTION|wxSYSTEM_MENU|wxRESIZE_BORDER|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX</style>
   </object>
   <object class="wxFrame" name="TextWindow">
     <title>Results</title>
@@ -754,7 +754,7 @@
                   <family>default</family>
                   <face>Courier New</face>
                 </font>
-                <style>wxTE_MULTILINE|wxTE_READONLY|wxTE_LINEWRAP</style>
+                <style>wxTE_MULTILINE|wxTE_READONLY</style>
                 <XRCED>
                   <assign_var>1</assign_var>
                 </XRCED>

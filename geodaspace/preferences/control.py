@@ -354,32 +354,37 @@ class preferencesDialog(preferences_xrc.xrcgsPrefsDialog):
         if evt:
             self.model.other_ols_diagnostics = self.OLSdiagnostics.GetValue()
         elif value is not None:
-            self.OLSdiagnostics.SetValue(self.model.other_ols_diagnostics)
+            if self.OLSdiagnostics:
+               self.OLSdiagnostics.SetValue(self.model.other_ols_diagnostics)
 
     def white_test(self, evtName=None, evt=None, value=None):
         if evt:
             self.model.white_test = self.WhiteTest.GetValue()
         elif value is not None:
-            self.WhiteTest.SetValue(self.model.white_test)
+            if self.WhiteTest:
+                self.WhiteTest.SetValue(self.model.white_test)
 
     def other_numcores(self, evtName=None, evt=None, value=None):
         if evt:
             self.model.other_numcores = self.numcores.GetValue()
         elif value is not None:
-            self.numcores.SetValue(self.model.other_numcores)
+            if self.numcores:
+                self.numcores.SetValue(self.model.other_numcores)
 
     def other_residualMoran(self, evtName=None, evt=None, value=None):
         if evt:
             self.model.other_residualMoran = self.residualMoran.GetValue()
         elif value is not None:
-            self.residualMoran.SetValue(self.model.other_residualMoran)
+            if self.residualMoran:
+                self.residualMoran.SetValue(self.model.other_residualMoran)
 
     def other_missingValueCheck(self, evtName=None, evt=None, value=None):
         if evt:
             self.model.other_missingValueCheck = \
                 self.missingValueCheck.GetValue()
         elif value is not None:
-            self.missingValueCheck.SetValue(self.model.other_missingValueCheck)
+            if self.missingValueCheck:
+                self.missingValueCheck.SetValue(self.model.other_missingValueCheck)
 
     def other_missingValue(self, evtName=None, evt=None, value=None):
         if evt:
@@ -394,7 +399,8 @@ class preferencesDialog(preferences_xrc.xrcgsPrefsDialog):
             except:
                 curval = None
             if self.model.other_missingValue != curval:
-                self.missingValue.SetValue(str(self.model.other_missingValue))
+                if self.missingValue:
+                    self.missingValue.SetValue(str(self.model.other_missingValue))
 
     def regimes_regime_error(self, evtName=None, evt=None, value=None):
         if evt:

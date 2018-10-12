@@ -1,24 +1,36 @@
 # -*- mode: python -*-
+
+block_cipher = None
+
+
 a = Analysis(['geodaspace/GeoDaSpace.py'],
-             pathex=['/Users/gspace/Desktop/BUILD_ENV/spreg/trunk'],
-             hiddenimports=['scipy.special._ufuncs_cxx', 'scipy.sparse.csgraph._validation', 'scipy.io.matlab.streams'],
-             hookspath=None,
-             runtime_hooks=None)
-for d in a.datas:
-    if 'pyconfig' in d[0]:
-        a.datas.remove(d)
-        break
-pyz = PYZ(a.pure)
+             pathex=['/Volumes/SharedFolders/Home/Downloads/GeoDaSpace'],
+             binaries=[],
+             datas=[],
+             hiddenimports=[],
+             hookspath=[],
+             runtime_hooks=[],
+             excludes=[],
+             win_no_prefer_redirects=False,
+             win_private_assemblies=False,
+             cipher=block_cipher,
+             noarchive=False)
+pyz = PYZ(a.pure, a.zipped_data,
+             cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
           a.binaries,
           a.zipfiles,
           a.datas,
+          [],
           name='GeoDaSpace',
           debug=False,
-          strip=None,
+          bootloader_ignore_signals=False,
+          strip=False,
           upx=True,
-          console=False , icon='geodaspace/icons/geodaspace.icns')
+          runtime_tmpdir=None,
+          console=False )
 app = BUNDLE(exe,
              name='GeoDaSpace.app',
-             icon='geodaspace/icons/geodaspace.icns')
+             icon=None,
+             bundle_identifier=None)

@@ -17,6 +17,266 @@ import variableTools
 import M_regression
 import pysal
 
+gear_png =  [
+"24 24 232 2 ",
+"   c gray11",
+".  c #262625",
+"X  c #292927",
+"o  c #3D3C36",
+"O  c #3D3D36",
+"+  c #4B4D52",
+"@  c #4C4C51",
+"#  c #4E4F52",
+"$  c #595A61",
+"%  c #595A62",
+"&  c #5C5C61",
+"*  c #5C5D65",
+"=  c #5C5D66",
+"-  c #5C5E69",
+";  c #5D5F6A",
+":  c #5C5E6D",
+">  c #5D5F6E",
+",  c #63646C",
+"<  c #64656E",
+"1  c #606274",
+"2  c #646677",
+"3  c #646678",
+"4  c #646679",
+"5  c #6F7174",
+"6  c #757573",
+"7  c #717174",
+"8  c #727274",
+"9  c #72727A",
+"0  c #78797A",
+"q  c #7A7A7E",
+"w  c #6E7181",
+"e  c #6F7182",
+"r  c #6E718C",
+"t  c #767883",
+"y  c #7B7B80",
+"u  c #7D7D82",
+"i  c #7B7C86",
+"p  c #757889",
+"a  c #7C7E88",
+"s  c #717490",
+"d  c #727593",
+"f  c #727695",
+"g  c #7A7D9A",
+"h  c #7B7E9A",
+"j  c #7A7E9D",
+"k  c #7A7F9E",
+"l  c #7B80A2",
+"z  c #7C80A1",
+"x  c #7F84A6",
+"c  c #7F84A7",
+"v  c #828489",
+"b  c #85858B",
+"n  c #8B8B8B",
+"m  c #8D8B8D",
+"M  c #838794",
+"N  c #848895",
+"B  c #8A8B91",
+"V  c #8A8A92",
+"C  c #898A95",
+"Z  c #888A96",
+"A  c #8E8F96",
+"S  c #80849F",
+"D  c #909197",
+"F  c #919197",
+"G  c #9C9D9D",
+"H  c #8185A0",
+"J  c #8186A7",
+"K  c #8388A8",
+"L  c #8489AA",
+"P  c #888CAD",
+"I  c #8E93A0",
+"U  c #9498A7",
+"Y  c #9599A7",
+"T  c #9398A8",
+"R  c #989AA9",
+"E  c #989BA9",
+"W  c #9A9DAA",
+"Q  c #9A9EAA",
+"!  c #9C9EAB",
+"~  c #999EAF",
+"^  c #9094B2",
+"/  c #9194B2",
+"(  c #9095B3",
+")  c #9397B6",
+"_  c #9398B6",
+"`  c #9599B4",
+"'  c #9498B5",
+"]  c #969AB5",
+"[  c #9599B6",
+"{  c #969AB7",
+"}  c #969BB7",
+"|  c #9A9FBA",
+" . c #9B9FBB",
+".. c #9EA0AA",
+"X. c #9FA1AD",
+"o. c #9DA1AE",
+"O. c #9BA0B0",
+"+. c #9EA4B5",
+"@. c #9FA4B6",
+"#. c #9DA1BD",
+"$. c #9DA2BD",
+"%. c #9FA3BC",
+"&. c #9FA3BD",
+"*. c #9DA2BE",
+"=. c #9EA3BF",
+"-. c #9FA4BE",
+";. c #A0A1A3",
+":. c #A5A5A6",
+">. c #A5A5A8",
+",. c #A7A7A9",
+"<. c #A6A6AA",
+"1. c #A8A8AB",
+"2. c #A9A9AD",
+"3. c #AAAAAD",
+"4. c #ACADAD",
+"5. c #A3A6B2",
+"6. c #A4A6B3",
+"7. c #A8A9B3",
+"8. c #AAADB1",
+"9. c #ABADB2",
+"0. c #ACACB3",
+"q. c #ACADB4",
+"w. c #ACAEB7",
+"e. c #A0A4B9",
+"r. c #A2A6BB",
+"t. c #A0A3BD",
+"y. c #A1A6BC",
+"u. c #A1A6BD",
+"i. c #A2A5BF",
+"p. c #A6ABBB",
+"a. c #A3A9BF",
+"s. c #A6A9BF",
+"d. c #A6ABBF",
+"f. c #AFB1BA",
+"g. c #B0B0B2",
+"h. c #B3B4B6",
+"j. c #9EA3C0",
+"k. c #9FA3C0",
+"l. c #A0A5C0",
+"z. c #A1A6C1",
+"x. c #A4A7C0",
+"c. c #A3A8C2",
+"v. c #A4A8C0",
+"b. c #A6AAC3",
+"n. c #A4A9C4",
+"m. c #A5AAC5",
+"M. c #A5ABC5",
+"N. c #A7ABC4",
+"B. c #A5ABC6",
+"V. c #A7ADC7",
+"C. c #A9ACC3",
+"Z. c #A8ADC4",
+"A. c #A9ADC5",
+"S. c #AAADC5",
+"D. c #AAAEC5",
+"F. c #AAAEC7",
+"G. c #A8ADC8",
+"H. c #A9AEC8",
+"J. c #ACB1C5",
+"K. c #AEB2C7",
+"L. c #AFB2C7",
+"P. c #ABB0C8",
+"I. c #ADB1C8",
+"U. c #ADB2C9",
+"Y. c #AFB2C8",
+"T. c #ACB1CA",
+"R. c #ACB2CC",
+"E. c #B0B5C6",
+"W. c #B7BBC6",
+"Q. c #B9BAC1",
+"!. c #B8BAC2",
+"~. c #BCBEC6",
+"^. c #BDBFC6",
+"/. c #B0B5C8",
+"(. c #B1B4C9",
+"). c #B4B6CB",
+"_. c #B2B7CF",
+"`. c #B4B7CC",
+"'. c #B9BDC9",
+"]. c #BABCCE",
+"[. c #B4B8D1",
+"{. c #B5BAD3",
+"}. c #B7BCD0",
+"|. c #BBBCD0",
+" X c #B9BED5",
+".X c #B9BED6",
+"XX c #BABFD6",
+"oX c #BABFD7",
+"OX c #BCC0D6",
+"+X c #BEC2D8",
+"@X c #C4C5CA",
+"#X c #C0C2D3",
+"$X c #C2C4D3",
+"%X c #C2C5D3",
+"&X c #C2C5D5",
+"*X c #CBCED5",
+"=X c #C1C7DD",
+"-X c #C3C7DD",
+";X c #C2C8DF",
+":X c #C6CBDC",
+">X c #C4C9DE",
+",X c #C4CADE",
+"<X c #C4CADF",
+"1X c #C5CBDF",
+"2X c #C7CDDF",
+"3X c #CBCED9",
+"4X c #CCCED9",
+"5X c #CFD1DB",
+"6X c #D0D2DC",
+"7X c #D4D6DD",
+"8X c #C3C9E0",
+"9X c #C5CBE1",
+"0X c #CDD1E2",
+"qX c #CBD1E4",
+"wX c #D1D4E0",
+"eX c #D2D5E2",
+"rX c #D4D8E5",
+"tX c #D6DAE5",
+"yX c #D4D9EA",
+"uX c #D4D9EB",
+"iX c #D7DCE8",
+"pX c #DADDEC",
+"aX c #DADFED",
+"sX c #DDE0EB",
+"dX c #DBE0EF",
+"fX c #DEE2ED",
+"gX c #DEE1EE",
+"hX c #DCE0F0",
+"jX c #DEE2F0",
+"kX c #DFE5F4",
+"lX c #DFE5F5",
+"zX c None",
+"zXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzX",
+"zXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzX",
+"zXzXzXzXzXzXzXzXzXzXzX*X7XzXzXzXzXzXzXzXzXzXzXzX",
+"zXzXzXzXzXzX<.@X1.zXzXrXpXzXzX1.@X<.zXzXzXzXzXzX",
+"zXzXzXzXzXzXq.kXOX4.h.tXiXg.,.~.jX9.zXzXzXzXzXzX",
+"zXzXzXzXzXzXzX'.sXfXjXyXuXfXsXhXW.zXzXzXzXzXzXzX",
+"zXzXzXG 3.zX<.wX:Xp.I M N Y L.qX*X..zX3.G zXzXzX",
+"zXzXzXw.pX!.wX:XU o.}.9X9XK.T o.qX5XQ.pXw.zXzXzX",
+"zXzXzXF 5.;X;X+.J.;X;X;X+X,X;Xd.e.:X;X5.A zXzXzX",
+"zXzXzXzXB }.K.r.OXOX..v b +.OXOX+.P.|.B zXzXzXzX",
+"zXzXzXzXA OXb.Z.[...8 zXzX8 E [.C.a.+XA zXzXzXzX",
+"zXzXf.6X%X[.$.N.T.y zXzXzXzXq T.P.$._.%X5X7.zXzX",
+"zXzXE d.r.m.$.m.N.y zXzXzXzX0 N.m.$.m.i.b.E zXzX",
+"zXzXzXzXi *.z.b.H.X.n zXzXm ..T.b.z.j.a zXzXzXzX",
+"zXzXzXzX9 { *.b.*.`.9.:.:.q.`.$.b.*.{ 9 zXzXzXzX",
+"zXzXzX7 C  .) C.x.{ D.&X&XD.} a.D._ | C 7 zXzXzX",
+"zXzXzXt / p H / K.(.) L L { (.I.) z p / t zXzXzX",
+"zXzXzX& , zX, h P i.].#X#X].t.P h , zX, & zXzXzX",
+"zXzXzXzXzXzXzXe l k c K J x k k w zXzXzXzXzXzXzX",
+"zXzXzXzXzXzX= z 4 % ; d d ; % 2 z & zXzXzXzXzXzX",
+"zXzXzXzXzXzX@ : + zXO r s O zX+ > # zXzXzXzXzXzX",
+"zXzXzXzXzXzXzX  zXzX. 1 4 X zXzXzXzXzXzXzXzXzXzX",
+"zXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzX",
+"zXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzX"
+]
+
 WHITE_TOOL_TIP = "White, H. (1980), Econometrica"
 HAC_TOOL_TIP = "Kelejian, H. and Prucha, I. (2007), Journal of Econometrics"
 HET_TOOL_TIP = "Kelejian, H. and Prucha, I. (2010), Journal of Econometrics"
@@ -32,6 +292,14 @@ class MyStringIO(StringIO.StringIO):
         pass
 
 
+class MyTarget(wx.TextDropTarget): 
+    def __init__(self, object): 
+	wx.TextDropTarget.__init__(self) 
+	self.object = object  
+
+    def OnDropText(self, x, y, data): 
+	self.object.SetValue(data) 
+	
 class TextCtrlDropTarget(wx.TextDropTarget):
     def __init__(self, target):
         wx.TextDropTarget.__init__(self)
@@ -175,7 +443,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.createSpatialLag = None
 
         # Setup Drop Targets
-        self.Y_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.Y_TextCtrl))
+	self.Y_TextCtrl.Enable()
+        self.Y_TextCtrl.SetDropTarget(NullDropTarget(self.Y_TextCtrl))
         self.YE_ListBox.SetDropTarget(ListBoxDropTarget(self.YE_ListBox))
         self.H_ListBox.SetDropTarget(ListBoxDropTarget(self.H_ListBox))
 
@@ -204,8 +473,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.Bind(wx.EVT_BUTTON, self.CreateKWeightsButtonClick,
                   self.CreateKWeightsButton)
         self.Bind(wx.EVT_BUTTON, self.run, self.RunButton)
-        self.Bind(wx.EVT_BUTTON, self.saveModel, self.SaveButton)
-        self.Bind(wx.EVT_BUTTON, self.close, self.CloseButton)
+        #self.Bind(wx.EVT_BUTTON, self.saveModel, self.SaveButton)
+        #self.Bind(wx.EVT_BUTTON, self.close, self.CloseButton)
         # self.DATAFILE.Bind(wx.EVT_COMBOBOX,self.setDataFile)
         # self.DATAFILE.Bind(wx.EVT_TEXT_ENTER,self.setDataFile)
         # self.IDVAR.Bind(wx.EVT_CHOICE,self.setIDVar)
@@ -273,9 +542,29 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.SEHACCheckBox.Bind(wx.EVT_CHECKBOX, self.updateModelType)
         self.SEHETCheckBox.Bind(wx.EVT_CHECKBOX, self.updateModelType)
         self.ST_LM.Bind(wx.EVT_CHECKBOX, self.updateModelType)
-
-        if not self.RegressionToolBar:  # Linux Fix.
-            self.RegressionToolBar = self.GetToolBar()
+	    
+	self.SetToolBar(None)
+	self.RegressionToolBar = self.CreateToolBar()
+	bmp_new = wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_OTHER)
+	bmp_open = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER)
+	bmp_save = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER)
+	bmp_saveas = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_OTHER)
+	bmp_report = wx.ArtProvider.GetBitmap(wx.ART_REPORT_VIEW, wx.ART_OTHER)
+	bmp_page = wx.ArtProvider.GetBitmap(wx.ART_HELP_PAGE, wx.ART_OTHER)
+	bmp_adv = wx.BitmapFromXPMData(gear_png)
+	
+	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolNewModel"), bmp_new, shortHelpString='Create New Model: Choose data file')    
+	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolOpenModel"), bmp_open, shortHelpString='Open Existing Model: Choose .mdl File')    
+	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolSaveModel"), bmp_save, shortHelpString='Save Model..')    
+	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolSaveModelAs"), bmp_saveas, shortHelpString='Save Model As...')    
+	self.RegressionToolBar.AddSeparator()
+	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolVariableSelector"), bmp_report, shortHelpString='Open the Variable List')    
+	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolResultsWindow"), bmp_page, shortHelpString='Show the Results Window')    
+	self.RegressionToolBar.AddSeparator()
+	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolAdvanced"), bmp_adv, shortHelpString='Show Advanced Settings')    
+	
+	self.RegressionToolBar.Realize()
+	
         self.RegressionToolBar.Bind(wx.EVT_MENU, self.newModel,
                                     id=wx.xrc.XRCID("ToolNewModel"))
         self.RegressionToolBar.Bind(wx.EVT_MENU, self.openModel,

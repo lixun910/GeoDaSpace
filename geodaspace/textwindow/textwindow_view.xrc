@@ -52,7 +52,7 @@
                   <family>default</family>
                   <face>Courier New</face>
                 </font>
-                <style>wxTE_MULTILINE|wxTE_READONLY|wxTE_LINEWRAP</style>
+                <style>wxTE_MULTILINE|wxTE_READONLY</style>
                 <XRCED>
                   <assign_var>1</assign_var>
                 </XRCED>

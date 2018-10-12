@@ -35,7 +35,7 @@ class guiApp(wx.App):
         if (width, height) != self.regFrame.GetSize():
             self.regFrame.SetClientRect((0, 0, width, height))
             self.regFrame.SetPosition((x, y))
-
+        self.regFrame.Fit()
         self.regFrame.Show()
         self.SetTopWindow(self.regFrame)
         self.regFrame.scroll.SetVirtualSize((570, 647))

@@ -100,10 +100,10 @@ class vVariableSelector(wx.MiniFrame):
                 self.sourcelist.InsertStringItem(sys.maxint, item)
         # else:
         #    for item in "abcdefghijklmnopqrstuvwxyz"*100:
-        # self.sourcelist.InsertStringItem(sys.maxint,
+        # self.sourcelist.InsertStringItem(sys.maxint,#
         # item+'_%d'%(random.randint(80,99)))
         self.sourcelist.SetColumnWidth(0, wx.LIST_AUTOSIZE_USEHEADER)
-        # dt = ListDrop(self.leftclick)
+        #dt = ListDrop(self.leftclick)
 
     def _startDrag(self, e):
         data = wx.CustomDataObject('py_str')

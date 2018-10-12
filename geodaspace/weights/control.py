@@ -355,9 +355,11 @@ class weightsDialog(xrcDIALOGWEIGHTS):
 
     def update_style(self, flags):
         # clear the existing pages.
-        for pid in xrange(self.weightsNotebook.GetPageCount() - 1, - 1, - 1):
-            self.weightsNotebook.GetPage(pid).Reparent(self.hidden_frame)
-            self.weightsNotebook.RemovePage(pid)  # Note, Remove do not Delete!
+        while self.weightsNotebook.GetPageCount() > 1:
+            self.weightsNotebook.RemovePage(0)
+        #for pid in xrange(self.weightsNotebook.GetPageCount() - 1, - 1, - 1):
+        #    self.weightsNotebook.GetPage(pid).Reparent(self.hidden_frame)
+        #    self.weightsNotebook.RemovePage(pid)  # Note, Remove do not Delete!
         if flags & ENABLE_CONTIGUITY_WEIGHTS:
             self.ContiguityPanel.Reparent(self.weightsNotebook)
             self.weightsNotebook.AddPage(*self.ContiguityPage)

@@ -202,7 +202,6 @@ def __init_resources():
                                       <size>93,-1</size>
                                       <font>
                                         <size>14</size>
-                                        <family>default</family>
                                         <style>normal</style>
                                         <weight>normal</weight>
                                         <underlined>0</underlined>
@@ -319,8 +318,6 @@ def __init_resources():
                   <size>93,-1</size>
                   <font>
                     <size>14</size>
-                    <family>default</family>
-                    <style>normal</style>
                     <weight>normal</weight>
                     <underlined>0</underlined>
                     <face>Courier</face>

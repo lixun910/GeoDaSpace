@@ -1,7 +1,7 @@
 # -*- mode: python -*-
 a = Analysis(['geodaspace/GeoDaSpace.py'],
-             pathex=['/Users/gspace/Desktop/BUILD_ENV/spreg/trunk'],
-             hiddenimports=['scipy.special._ufuncs_cxx', 'scipy.sparse.csgraph._validation', 'scipy.io.matlab.streams'],
+             pathex=['/Volumes/SharedFolders/Home/Downloads/spreg'],
+             hiddenimports=['scipy._lib.messagestream','scipy.special._ufuncs_cxx', 'scipy.sparse.csgraph._validation', 'scipy.io.matlab.streams'],
              hookspath=None,
              runtime_hooks=None)
 pyz = PYZ(a.pure)
