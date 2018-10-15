@@ -644,6 +644,50 @@ def Probit(reg, vm, w, spat_diag):
     summary(reg=reg, vm=vm, instruments=False,
             short_intro=True, spat_diag=spat_diag)
 
+def SUR(reg, nonspat_diag=True, spat_diag=False, regimes=False,\
+        tsls=False, lambd=False, surlm=False, ml=True):
+    reg.__summary = {}
+    # compute diagnostics and organize summary output
+    reg.__summary['summary_zt'] = 'z'
+    reg.__summary['summary_std_err'] = None
+    if ml:
+        try:
+            sum_str = "%-20s:%12.3f                %-22s:%12d\n" % (
+                'Log likelihood (SUR)', reg.llik, 'Number of Iterations', reg.niter)
+        except:
+            sum_str = "%-20s:%12.3f\n" % (
+                'Log likelihood (SUR)', reg.llik)
+        summary_add_other_top(reg, sum_str)
+    if lambd:
+        try:
+            sum_str = "%-20s:%12.3f                %-22s:%12.3f\n" % (
+                'Log likel. (error)', reg.errllik, 'Log likel. (SUR error)', reg.surerrllik)
+            summary_add_other_top(reg, sum_str)
+        except:
+            pass
+    # build coefficients table body
+    summary_coefs_sur(reg, lambd=lambd, regimes=regimes)
+    if tsls:
+        for i in range(1,reg.n_eq+1):
+            summary_coefs_instruments(reg, sur=i)
+    if regimes:
+        summary_regimes(reg, chow=False)
+        for i in range(1,reg.n_eq+1):
+            summary_chow(reg, sur=i)
+
+    summary_warning(reg)
+    summary_diag_sur(reg, nonspat_diag=nonspat_diag, spat_diag=spat_diag, tsls=tsls, lambd=lambd, ml=ml, regimes=regimes)
+    if surlm and spat_diag:  # only in classic SUR
+        sum_str =  summary_spat_diag_intro(no_mi=True)
+        sum_str += "%-27s      %2d    %12.3f        %6.4f\n" % (
+        "Lagrange Multiplier (error)", reg.lmEtest[1], reg.lmEtest[0], reg.lmEtest[2])
+        sum_str += "%-27s      %2d    %12.3f        %6.4f\n" % (
+        "Lagrange Multiplier (lag)  ", reg.lmlagtest[1],reg.lmlagtest[0],reg.lmlagtest[2])
+        summary_add_other_end(reg, sum_str)
+
+    summary_errorcorr(reg)
+    summary_SUR(reg=reg)
+
 ##############################################################################
 
 
@@ -882,15 +926,18 @@ def summary_open(multi=False):
     return strSummary
 
 
-def summary_intro(reg, short):  # extra space d
+def summary_intro(reg, short, sur=False):  # extra space d
     title = "SUMMARY OF OUTPUT: " + reg.title + "\n"
     strSummary = title
     strSummary += "-" * (len(title) - 1) + "\n"
     strSummary += "%-20s:%12s\n" % ('Data set', reg.name_ds)
-    if reg.name_w:
+    try:
         strSummary += "%-20s:%12s\n" % ('Weights matrix', reg.name_w)
-    strSummary += "%-20s:%12s                %-22s:%12d\n" % (
-        'Dependent Variable', reg.name_y, 'Number of Observations', reg.n)
+    except:
+        pass
+    if not sur:
+        strSummary += "%-20s:%12s                %-22s:%12d\n" % (
+            'Dependent Variable', reg.name_y, 'Number of Observations', reg.n)
     if not short:
         strSummary += "%-20s:%12.4f                %-22s:%12d\n" % (
             'Mean dependent var', reg.mean_y, 'Number of Variables', reg.k)
@@ -899,6 +946,17 @@ def summary_intro(reg, short):  # extra space d
     #strSummary += '\n'
     return strSummary
 
+def summary_sur_mid(reg, eq):
+    strSummary = "SUMMARY OF EQUATION " + str(eq+1) + "\n"
+    strSummary += "-" * (len(strSummary) - 1) + "\n"
+    n_var = int(reg.bigK[list(reg.name_bigy.keys()).index(eq)])
+    strSummary += "%-20s:%12s                %-22s:%12d\n" % (
+        'Dependent Variable', reg.name_bigy[eq], 'Number of Variables', n_var)
+    strSummary += "%-20s:%12.4f                %-22s:%12d\n" % (
+        'Mean dependent var', np.mean(reg.bigy[eq]), 'Degrees of Freedom', reg.n - n_var)
+    strSummary += "%-20s:%12.4f\n" % (
+        'S.D. dependent var', np.std(reg.bigy[eq]))
+    return strSummary
 
 def summary_coefs_intro(reg):
     strSummary = "\n"
@@ -962,23 +1020,33 @@ def summary_coefs_lambda(reg, zt_stat):
             'summary_coefs'] += "%20s    %12.7f    \n" % (name_var[-1], reg.betas[-1][0])
 
 
-def summary_coefs_instruments(reg):
+def summary_coefs_instruments(reg, sur=None):
     """Generates a list of the instruments used.
     """
+    if not sur:
+        name_q = reg.name_q
+        name_yend = reg.name_yend
+    else:
+        eq = list(reg.name_bigy.keys())[sur-1]
+        name_q = reg.name_bigq[eq]
+        name_yend = reg.name_bigyend[eq]
     insts = "Instruments: "
-    for name in sorted(reg.name_q):
+    for name in sorted(name_q):
         insts += name + ", "
     text_wrapper = TW.TextWrapper(width=76, subsequent_indent="             ")
     insts = text_wrapper.fill(insts[:-2])
     insts += "\n"
     inst2 = "Instrumented: "
-    for name in sorted(reg.name_yend):
+    for name in sorted(name_yend):
         inst2 += name + ", "
     text_wrapper = TW.TextWrapper(width=76, subsequent_indent="             ")
     inst2 = text_wrapper.fill(inst2[:-2])
     inst2 += "\n"
     inst2 += insts
-    reg.__summary['summary_coefs_instruments'] = inst2
+    if not sur:
+        reg.__summary['summary_coefs_instruments'] = inst2
+    else:
+        reg.__summary[eq]['summary_coefs_instruments'] = inst2
 
 
 def summary_iteration(reg):  # extra space d
@@ -998,6 +1066,11 @@ def summary_iteration(reg):  # extra space d
     except:
         reg.__summary['summary_other_top'] = txt
 
+def summary_add_other_top(reg, sum_str):
+    try:
+        reg.__summary['summary_other_top'] += sum_str
+    except:
+        reg.__summary['summary_other_top'] = sum_str
 
 def summary_regimes(reg, chow=True):
     """Lists the regimes variable used.
@@ -1011,7 +1084,45 @@ def summary_regimes(reg, chow=True):
     if chow:
         summary_chow(reg)
 
+def summary_SUR(reg, short_intro=True):
+    summary = summary_open()
+    summary += summary_intro(reg, short_intro, sur=True)
+    summary += "%-20s:%12d                %-22s:%12d\n" % (
+        'Number of Equations', reg.n_eq, 'Number of Observations', reg.n)
+    try:
+        summary += reg.__summary['summary_other_top']
+    except:
+        pass
+    summary += "----------\n\n"
+    for m in list(reg.name_bigy.keys()):
+        summary += summary_sur_mid(reg, m)
+        #summary += mreg.__summary['summary_r2']
+        #if nonspat_diag:
+        #    summary += mreg.__summary['summary_nonspat_diag_1']
+        summary += summary_coefs_intro(reg)
+        summary += reg.__summary[m]['summary_coefs']
+        summary += "------------------------------------------------------------------------------------\n"
+        try:
+            summary += reg.__summary[m]['summary_coefs_instruments']
+        except:
+            pass
+        try:
+            summary += reg.__summary['summary_other_mid']
+        except:
+            pass
+        try:
+            summary += reg.__summary[m]['summary_chow']
+        except:
+            pass
 
+        summary += "\n"
+    try:
+        summary += reg.__summary['summary_other_end']
+    except:
+        pass
+    summary += summary_close()
+    reg.summary = summary
+    
 def summary_sur(reg, u_cov=False):
     """Lists the equation ID variable used.
     """
@@ -1038,15 +1149,66 @@ def summary_sur(reg, u_cov=False):
         except:
             pass
 
-
-def summary_chow(reg, lambd=False):
-    reg.__summary['summary_chow'] = "\nREGIMES DIAGNOSTICS - CHOW TEST\n"
-    reg.__summary[
-        'summary_chow'] += "                 VARIABLE        DF        VALUE           PROB\n"
-    if reg.cols2regi == 'all':
-        names_chow = reg.name_x_r[1:]
+def summary_coefs_sur(reg, lambd=False, regimes=False):
+    try:
+        betas = reg.bSUR
+        inf = reg.sur_inf
+    except:
+        betas = reg.b3SLS
+        inf = reg.tsls_inf
+    if regimes:
+        regK = len(reg.regimes_set) # number of regimes
     else:
-        names_chow = [reg.name_x_r[1:][i] for i in np.where(reg.cols2regi)[0]]
+        regK = 1   
+    for eq in reg.name_bigy.keys():
+        reg.__summary[eq] = {}
+        strSummary = ""
+        regk = len(reg.name_bigX[eq]) / regK #number of exogenous variables in each regime
+        for k in range(regK):
+            for i in range(len(reg.name_bigX[eq]))[int(k*regk):int((k+1)*regk)]:
+                strSummary += "%20s    %12.7f    %12.7f    %12.7f    %12.7f\n"   \
+                    % (reg.name_bigX[eq][i], betas[eq][i][0], inf[eq][i][0],\
+                         inf[eq][i][1], inf[eq][i][2])
+            try:
+                regkend = len(reg.name_bigyend[eq]) / regK
+                h = len(reg.name_bigX[eq])
+                fixed_rho = 0
+                if k == range(regK)[-1] and (len(reg.name_bigyend[eq])/regK)*regK<len(reg.name_bigyend[eq]):
+                    fixed_rho += 1
+                for j in range(len(reg.name_bigyend[eq]))[int(k*regkend):int((k+1)*regkend+fixed_rho)]:
+                    strSummary += "%20s    %12.7f    %12.7f    %12.7f    %12.7f\n"   \
+                        % (reg.name_bigyend[eq][j], betas[eq][h+j][0], inf[eq][h+j][0],\
+                             inf[eq][h+j][1], inf[eq][h+j][2])
+            except:
+                pass 
+        if lambd:
+            pos = list(reg.name_bigy.keys()).index(eq)
+            try:
+                strSummary += "%20s    %12.7f    %12.7f    %12.7f    %12.7f\n"   \
+                    % ("lambda_"+str(eq+1), reg.lamsur[pos], reg.lamsetp[0][pos][0],\
+                         reg.lamsetp[1][pos][0], reg.lamsetp[2][pos][0])
+            except:
+                strSummary += "%20s    %12.7f    \n"   \
+                    % ("lambda_"+str(eq+1), reg.lamsur[pos])
+
+        reg.__summary[eq]['summary_coefs'] = strSummary
+
+
+def summary_chow(reg, lambd=False, sur=False):
+    sum_text = "\nREGIMES DIAGNOSTICS - CHOW TEST"
+    if sur is not False:
+        eq = list(reg.name_bigy.keys())[sur-1]        
+        name_x_r = reg.name_x_r[eq]
+        joint,regi = reg.chow_regimes[eq]
+        sum_text += " WITHIN EQUATION"
+    else:
+        name_x_r = reg.name_x_r
+        joint,regi = reg.chow.joint,reg.chow.regi
+    sum_text += "\n                 VARIABLE        DF        VALUE           PROB\n"
+    if reg.cols2regi == 'all':
+        names_chow = name_x_r[1:]
+    else:
+        names_chow = [name_x_r[1:][i] for i in np.where(reg.cols2regi)[0]]
     if reg.constant_regi == 'many':
         indices = [0] + (np.argsort(names_chow) + 1).tolist()
         names_chow = ['CONSTANT'] + names_chow
@@ -1056,11 +1218,15 @@ def summary_chow(reg, lambd=False):
         indices += [-1]
         names_chow += ['lambda']
     for i in indices:
-        reg.__summary['summary_chow'] += "%25s        %2d    %12.3f        %9.4f\n" % (
-            names_chow[i], reg.nr - 1, reg.chow.regi[i, 0], reg.chow.regi[i, 1])
-    reg.__summary['summary_chow'] += "%25s        %2d    %12.3f        %9.4f\n" % (
-        'Global test', reg.kr * (reg.nr - 1), reg.chow.joint[0], reg.chow.joint[1])
-
+        sum_text += "%25s        %2d    %12.3f        %9.4f\n" % (
+            names_chow[i], reg.nr - 1, regi[i, 0], regi[i, 1])
+    sum_text += "%25s        %2d    %12.3f        %9.4f\n" % (
+        'Global test', reg.kr * (reg.nr - 1), joint[0], joint[1])
+    reg.__summary['summary_chow'] = sum_text
+    if not sur:
+        reg.__summary['summary_chow'] = sum_text
+    else:
+        reg.__summary[eq]['summary_chow'] = sum_text
 
 def summary_warning(reg):
     try:
@@ -1147,10 +1313,13 @@ def summary_nonspat_diag_2(reg):
     return strSummary
 
 
-def summary_spat_diag_intro():
+def summary_spat_diag_intro(no_mi=False):
     strSummary = ""
     strSummary += "\nDIAGNOSTICS FOR SPATIAL DEPENDENCE\n"
-    strSummary += "TEST                           MI/DF       VALUE           PROB\n"
+    if no_mi:
+        strSummary += "TEST                              DF       VALUE           PROB\n"
+    else:
+        strSummary += "TEST                           MI/DF       VALUE           PROB\n"
     return strSummary
 
 
@@ -1190,6 +1359,100 @@ def summary_spat_diag_probit(reg):
         "Pinkse-Slade (error)", 1, reg.PS_error[0], reg.PS_error[1])
     return strSummary
 
+def summary_diag_sur(reg, nonspat_diag, spat_diag, tsls, lambd, rho=False, ml=True, regimes=False):
+    if not ml:
+        try:
+            if reg.joinrho != None:
+                rho = True
+        except:
+            pass
+        if spat_diag and rho:
+            strSummary = ""
+            strSummary += "\nREGRESSION DIAGNOSTICS\n"
+            #strSummary += "----------------------\n"
+            strSummary += "                                     TEST         DF       VALUE           PROB\n"
+            strSummary += "%41s        %2d   %10.3f           %6.4f\n" % (
+                "Joint significance (rho)", reg.joinrho[1], reg.joinrho[0], reg.joinrho[2])        
+            summary_add_other_end(reg, strSummary)
+    else:
+        if nonspat_diag or (spat_diag and lambd):
+            strSummary = ""
+            strSummary += "\nREGRESSION DIAGNOSTICS\n"
+            #strSummary += "----------------------\n"
+            strSummary += "                                     TEST         DF       VALUE           PROB\n"
+            if nonspat_diag:
+                try:
+                    strSummary += "%41s        %2d   %10.3f           %6.4f\n" % (
+                        "LM test on Sigma", reg.lmtest[1], reg.lmtest[0], reg.lmtest[2])
+                except:
+                    pass
+                strSummary += "%41s        %2d   %10.3f           %6.4f\n" % (
+                    "LR test on Sigma", reg.lrtest[1], reg.lrtest[0], reg.lrtest[2])
+            if lambd and spat_diag:
+                strSummary += "%41s        %2d   %10.3f           %6.4f\n" % (
+                    "LR test on lambda", reg.likrlambda[1], reg.likrlambda[0], reg.likrlambda[2])
+                if reg.vm is not None:
+                    strSummary += "%41s        %2d   %10.3f           %6.4f\n" % (
+                        "Joint significance (lambda)", reg.joinlam[1], reg.joinlam[0], reg.joinlam[2])        
+            summary_add_other_end(reg, strSummary)
+    chow_lamb = False
+    try:
+        if reg.lamtest != None:
+            chow_lamb = True
+    except:
+        pass
+    if nonspat_diag or (spat_diag and chow_lamb):
+        if reg.surchow != None:
+            strChow = "\nOTHER DIAGNOSTICS - CHOW TEST BETWEEN EQUATIONS\n"
+            strChow += "                                VARIABLES         DF       VALUE           PROB\n"
+            if nonspat_diag:
+                if regimes:
+                    regK = len(reg.regimes_set)
+                else:
+                    regK = 1
+                kx = len(reg.surchow)
+                kend = 0
+                if tsls:
+                    kend = len(reg.name_bigyend[list(reg.name_bigyend.keys())[0]])
+                    kx += -kend
+                names_chow = {}
+                reg_counter = 1
+                for k in range(len(reg.surchow)):
+                    names_chow[k] = ""
+                    if k < ((kx+kend)*reg_counter-kend)/regK:
+                        kxadj = int(k-(reg_counter-1)*kend/regK)
+                        for i in reg.name_bigX:
+                            names_chow[k] += reg.name_bigX[i][kxadj] + ", "
+                    else:
+                        for j in reg.name_bigyend:
+                            kxadj = int(k-kx*reg_counter/regK)
+                            names_chow[k] += reg.name_bigyend[j][kxadj] + ", "
+                    if k+1 == (kx+kend)*reg_counter/regK:
+                        reg_counter += 1
+                    if len(names_chow[k])>42:
+                        names_chow[k] = names_chow[k][0:38] + "..."
+                    else:
+                        names_chow[k] = names_chow[k][:-2]
+                reg_counter = 1
+                for k in range(len(reg.surchow)):
+                    if k < ((kx+kend)*reg_counter-kend)/regK:
+                        kadj = int(k-(reg_counter-1)*kend/regK)
+                    else:
+                        kadj = int(kx+k-kx*reg_counter/regK)
+                    if k + 1 == (kx+kend)*reg_counter/regK:
+                        reg_counter += 1
+                    strChow += "%41s        %2d   %10.3f           %6.4f\n" % (
+                        names_chow[k], reg.surchow[kadj][1], reg.surchow[kadj][0], reg.surchow[kadj][2])
+            if spat_diag and chow_lamb:
+                strChow += "%41s        %2d   %10.3f           %6.4f\n" % (
+                    "lambda", reg.lamtest[1], reg.lamtest[0], reg.lamtest[2])
+            summary_add_other_end(reg, strChow)
+
+def summary_add_other_end(reg, strSummary):
+    try:
+        reg.__summary['summary_other_end'] += strSummary
+    except:
+        reg.__summary['summary_other_end'] = strSummary
 
 def summary_vm(reg, instruments):
     strVM = "\n"
@@ -1210,6 +1473,20 @@ def summary_vm(reg, instruments):
         strVM += "\n"
     return strVM
 
+def summary_errorcorr(reg):
+    str_ucv = "\n"
+    str_ucv += "ERROR CORRELATION MATRIX\n"
+    #str_ucv += "------------------------\n"
+    for i in range(reg.n_eq):
+        str_ucv += "%12s" %("EQUATION " + str(i+1))
+    str_ucv += "\n"
+    nrow = reg.corr.shape[0]
+    ncol = reg.corr.shape[1]
+    for i in range(nrow):
+        for j in range(ncol):
+            str_ucv += "%12.6f" % (reg.corr[i][j])
+        str_ucv += "\n"
+    summary_add_other_end(reg, str_ucv)
 
 def summary_pred(reg):
     strPred = "\n\n"

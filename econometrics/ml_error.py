@@ -480,6 +480,28 @@ def err_c_loglik(lam, n, y, ylag, x, xlag, W):
     clik = nlsig2 - jacob
     return clik
 
+def err_c_loglik_sp(lam, n, y, ylag, x, xlag, I, Wsp):
+    # concentrated log-lik for error model, no constants, LU
+    if isinstance(lam, np.ndarray):
+        if lam.shape == (1,1):
+            lam = lam[0][0] #why does the interior value change?
+    ys = y - lam * ylag
+    xs = x - lam * xlag
+    ysys = np.dot(ys.T, ys)
+    xsxs = np.dot(xs.T, xs)
+    xsxsi = np.linalg.inv(xsxs)
+    xsys = np.dot(xs.T, ys)
+    x1 = np.dot(xsxsi, xsys)
+    x2 = np.dot(xsys.T, x1)
+    ee = ysys - x2
+    sig2 = ee[0][0] / n
+    nlsig2 = (n / 2.0) * np.log(sig2)
+    a = I - lam * Wsp
+    LU = SuperLU(a.tocsc())
+    jacob = np.sum(np.log(np.abs(LU.U.diagonal()))) 
+    # this is the negative of the concentrated log lik for minimization
+    clik = nlsig2 - jacob
+    return clik
 
 def err_c_loglik_ord(lam, n, y, ylag, x, xlag, evals):
     # concentrated log-lik for error model, no constants, brute force

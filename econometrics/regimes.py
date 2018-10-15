@@ -75,27 +75,29 @@ class Chow:
 
     def __init__(self, reg):
         kr, kf, kryd, nr, betas, vm = reg.kr, reg.kf, reg.kryd, reg.nr, reg.betas, reg.vm
-        if betas.shape[0] != vm.shape[0]:
-            if kf > 0:
-                betas = betas[0:vm.shape[0], :]
-                kf = kf - 1
-            else:
-                brange = []
-                for i in range(nr):
-                    brange.extend(range(i * (kr + 1), i * (kr + 1) + kr))
-                betas = betas[brange, :]
-        r_global = []
-        regi = np.zeros((reg.kr, 2))
-        for vari in np.arange(kr):
-            r_vari = buildR1var(vari, kr, kf, kryd, nr)
-            r_global.append(r_vari)
-            q = np.zeros((r_vari.shape[0], 1))
-            regi[vari, :] = wald_test(betas, r_vari, q, vm)
-        r_global = np.vstack(tuple(r_global))
-        q = np.zeros((r_global.shape[0], 1))
-        joint = wald_test(betas, r_global, q, vm)
-        self.joint = joint
-        self.regi = regi
+        self.joint, self.regi = _chow_run(reg.kr, reg.kf, reg.kryd, reg.nr, reg.betas, reg.vm)
+
+def _chow_run(kr, kf, kryd, nr, betas, vm):
+    if betas.shape[0] != vm.shape[0]:
+        if kf > 0:
+            betas = betas[0:vm.shape[0], :]
+            kf = kf - 1
+        else:
+            brange = []
+            for i in range(nr):
+                brange.extend(list(range(i * (kr + 1), i * (kr + 1) + kr)))
+            betas = betas[brange, :]
+    r_global = []
+    regi = np.zeros((kr, 2))
+    for vari in np.arange(kr):
+        r_vari = buildR1var(vari, kr, kf, kryd, nr)
+        r_global.append(r_vari)
+        q = np.zeros((r_vari.shape[0], 1))
+        regi[vari, :] = wald_test(betas, r_vari, q, vm)
+    r_global = np.vstack(tuple(r_global))
+    q = np.zeros((r_global.shape[0], 1))
+    joint = wald_test(betas, r_global, q, vm)
+    return joint,regi
 
 
 class Wald:
