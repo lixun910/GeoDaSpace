@@ -1,17 +1,17 @@
 import unittest
 import numpy as np
-from ..sur_utils import sur_dictxy, sur_dictZ
-from ..sur_lag import SURlagIV
-from .test_sur import dict_compare
-import libpysal
-from libpysal.common import RTOL
+from econometrics.sur_utils import sur_dictxy, sur_dictZ
+from econometrics.sur_lag import SURlagIV
+from test_sur import dict_compare
+import pysal
 
-PEGP = libpysal.examples.get_path
+RTOL = .00001
+ATOL = 1e-12
 
 class Test_SURlagIV(unittest.TestCase):
     def setUp(self):
-        self.db = libpysal.io.open(libpysal.examples.get_path('NAT.dbf'),'r')
-        self.w = libpysal.weights.Queen.from_shapefile(libpysal.examples.get_path("NAT.shp"))
+        self.db = pysal.open(pysal.examples.get_path('NAT.dbf'),'r')
+        self.w = pysal.weights.queen_from_shapefile(pysal.examples.get_path("NAT.shp"))
         self.w.transform = 'r'
 
 

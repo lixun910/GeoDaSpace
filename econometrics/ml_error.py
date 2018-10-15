@@ -14,6 +14,7 @@ import summary_output as SUMMARY
 import regimes as REGI
 from w_utils import symmetrize
 try:
+    from scipy.sparse.linalg import splu as SuperLU
     from scipy.optimize import minimize_scalar
     minimize_scalar_available = True
 except ImportError:

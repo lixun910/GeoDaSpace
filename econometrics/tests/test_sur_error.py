@@ -1,19 +1,18 @@
 import unittest
 import numpy as np
-import libpysal
-from ..sur_utils import sur_dictxy
-from ..sur_error import SURerrorML, SURerrorGM
-from .test_sur import dict_compare
-from libpysal.common import RTOL
+import pysal
+from econometrics.sur_utils import sur_dictxy
+from econometrics.sur_error import SURerrorML, SURerrorGM
+from test_sur import dict_compare
+RTOL = .00001
 ATOL = 1e-12
 
-PEGP = libpysal.examples.get_path
 
 
 class Test_SUR_error(unittest.TestCase):
     def setUp(self):
-        self.db = libpysal.io.open(libpysal.examples.get_path('NAT.dbf'),'r')
-        self.w = libpysal.weights.Queen.from_shapefile(libpysal.examples.get_path("NAT.shp"))
+        self.db = pysal.open(pysal.examples.get_path('NAT.dbf'),'r')
+        self.w = pysal.weights.queen_from_shapefile(pysal.examples.get_path("NAT.shp"))
         self.w.transform = 'r'
 
 
@@ -115,8 +114,8 @@ class Test_SUR_error(unittest.TestCase):
 
 class Test_SUR_error_gm(unittest.TestCase):
     def setUp(self):
-        self.db = libpysal.io.open(libpysal.examples.get_path('NAT.dbf'),'r')
-        self.w = libpysal.weights.Queen.from_shapefile(libpysal.examples.get_path("NAT.shp"))
+        self.db = pysal.open(pysal.examples.get_path('NAT.dbf'),'r')
+        self.w = pysal.weights.queen_from_shapefile(pysal.examples.get_path("NAT.shp"))
         self.w.transform = 'r'
 
 

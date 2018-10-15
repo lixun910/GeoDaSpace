@@ -303,8 +303,9 @@ def buildR(kr, kf, nr):
               Array with constrain setup to test stability across regimes of
               one variable
     '''
-    return np.vstack(tuple(map(buildR1var, np.arange(kr), [kr] * kr, [kf] * kr, [nr] * kr)))
-
+    #return np.vstack(tuple(map(buildR1var, np.arange(kr), [kr] * kr, [kf] * kr, [nr] * kr)))
+    return np.vstack(tuple(map(buildR1var, np.arange(kr), [kr] * kr, [kf] * kr,\
+                   [0] * kr, [nr] * kr)))    
 
 def buildR1var(vari, kr, kf, kryd, nr):
     '''
