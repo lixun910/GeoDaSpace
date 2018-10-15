@@ -115,7 +115,7 @@ def __init_resources():
                 <object class="sizeritem">
                   <object class="wxBitmapButton" name="dataFileButton">
                     <bitmap stock_id="wxART_FILE_OPEN"/>
-                    <size>15,13d</size>
+                    <size>16,16d</size>
                     <style>wxBU_AUTODRAW</style>
                   </object>
                   <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL</flag>

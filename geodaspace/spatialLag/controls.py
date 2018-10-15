@@ -163,6 +163,8 @@ class C_CreateSpatialLag(SpatialLag_xrc.xrcCreateSpatialLag):
         self.EndModal(wx.ID_CANCEL)
 
     def run(self, evt):
+        
+        
         dpath, dfile = os.path.split(self.model.get('dataFile'))
         wild = '*.' + dfile.split('.')[1]
         fileDialog = wx.FileDialog(self, defaultFile=dfile, defaultDir=dpath,
@@ -172,16 +174,19 @@ class C_CreateSpatialLag(SpatialLag_xrc.xrcCreateSpatialLag):
         result = fileDialog.ShowModal()
         if result == wx.ID_OK:
             path = fileDialog.GetPath()
-            self.model.run(path)
-            self.results.append(path)
-            dialog = wx.MessageDialog(self,
-                                      "The new variables were saved in, \n%s"
-                                      % (path), "Success",
-                                      wx.OK | wx.ICON_INFORMATION)
-            dialog.ShowModal()
-            self.model.set('dataFile', path)
-            if self.dialogMode:
-                self.EndModal(wx.ID_OK)
+            if self.model.run(path) == False:
+                dialog = wx.MessageDialog(self, "Please check if all inputs (W and lag names) are valid.", "Warning", wx.OK | wx.ICON_ERROR)
+                dialog.ShowModal()                
+            else:
+                self.results.append(path)
+                dialog = wx.MessageDialog(self,
+                                          "The new variables were saved in, \n%s"
+                                          % (path), "Success",
+                                          wx.OK | wx.ICON_INFORMATION)
+                dialog.ShowModal()
+                self.model.set('dataFile', path)
+                if self.dialogMode:
+                    self.EndModal(wx.ID_OK)                
 
     def addRow(self, evt=None, varIDX=-1):
         """Add an additional row to the Variables Table"""

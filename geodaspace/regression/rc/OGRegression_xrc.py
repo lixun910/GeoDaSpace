@@ -188,7 +188,7 @@ def __init_resources():
                               <object class="sizeritem">
                                 <object class="wxBitmapButton" name="DATA_INPUTFILE">
                                   <bitmap stock_id="wxART_FILE_OPEN"/>
-                                  <size>15,13d</size>
+                                  <size>16,16d</size>
                                   <tooltip>Open data file...</tooltip>
                                   <style>wxBU_AUTODRAW|wxBU_EXACTFIT</style>
                                   <XRCED>
@@ -217,10 +217,10 @@ def __init_resources():
                                   <object class="wxBoxSizer">
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="CreateMWeightsButton">
-                                        <size>15,13d</size>
+                                        <size>16,16d</size>
                                         <bitmap stock_id="wxART_NEW"/>
                                         <tooltip>Create Weights</tooltip>
-                                        <style>wxBU_AUTODRAW|wxBU_EXACTFIT</style>
+                                        <style></style>
                                         <XRCED>
                                           <assign_var>1</assign_var>
                                         </XRCED>
@@ -229,7 +229,7 @@ def __init_resources():
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="OpenMWeightsButton">
-                                        <size>15,13d</size>
+                                        <size>16,16d</size>
                                         <bitmap stock_id="wxART_FILE_OPEN"/>
                                         <tooltip>Open Weights</tooltip>
                                         <style>wxBU_AUTODRAW|wxBU_EXACTFIT</style>
@@ -240,13 +240,13 @@ def __init_resources():
                                       <flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTRE_VERTICAL</flag>
                                     </object>
                                     <object class="spacer">
-                                      <size>15,15</size>
+                                      <size>16,16</size>
                                       <option>1</option>
                                       <flag>wxALL|wxEXPAND</flag>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="PropMWeightsButton">
-                                        <size>15,13d</size>
+                                        <size>16,16d</size>
                                         <bitmap>gear_png</bitmap>
                                         <tooltip>Properties for Selected Weights...</tooltip>
                                         <style>wxBU_AUTODRAW|wxBU_EXACTFIT</style>
@@ -283,7 +283,7 @@ def __init_resources():
                                   <object class="wxBoxSizer">
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="CreateKWeightsButton">
-                                        <size>15,13d</size>
+                                        <size>16,16d</size>
                                         <bitmap stock_id="wxART_NEW"/>
                                         <tooltip>Create Weights</tooltip>
                                         <style>wxBU_AUTODRAW|wxBU_EXACTFIT</style>
@@ -295,7 +295,7 @@ def __init_resources():
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="OpenKWeightsButton">
-                                        <size>15,13d</size>
+                                        <size>16,16d</size>
                                         <bitmap stock_id="wxART_FILE_OPEN"/>
                                         <tooltip>Open Weights</tooltip>
                                         <style>wxBU_AUTODRAW|wxBU_EXACTFIT</style>
@@ -307,13 +307,13 @@ def __init_resources():
                                     </object>
                                     <orient>wxHORIZONTAL</orient>
                                     <object class="spacer">
-                                      <size>15,15</size>
+                                      <size>16,16</size>
                                       <option>1</option>
                                       <flag>wxALL|wxEXPAND</flag>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="PropKWeightsButton">
-                                        <size>15,13d</size>
+                                        <size>16,16d</size>
                                         <bitmap>gear_png</bitmap>
                                         <tooltip>Properties for Selected Weights...</tooltip>
                                         <style>wxBU_AUTODRAW|wxBU_EXACTFIT</style>
@@ -878,7 +878,7 @@ def __init_resources():
             <tooltip>Create A Spatial Lag of the Selected Variables...</tooltip>
           </object>
           <object class="separator"/>
-          <bitmapsize>15,15</bitmapsize>
+          <bitmapsize>16,16</bitmapsize>
           <margins>0,5</margins>
           <style>wxTB_FLAT|wxTB_HORIZONTAL</style>
           <XRCED>

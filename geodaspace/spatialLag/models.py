@@ -74,7 +74,13 @@ class M_CreateSpatialLag(AbstractModel):
             return True
 
     def run(self, path):
-        if self.verify():
+        W = self.loadWeights()
+        if W == None:
+            return False
+        
+        if self.verify() == False:
+            return False
+        else:
             print "running"
             # print self.data['wtFiles'][self.data['wtFile']]
             newVars = [var.run() for var in self.newVars]
@@ -83,7 +89,7 @@ class M_CreateSpatialLag(AbstractModel):
             db = self.db()
             xid = [db.header.index(i) for i in vars]
             X = [db[:, i] for i in xid]
-            W = self.loadWeights()
+            
             lag = [pysal.lag_spatial(W, y) for y in X]
             lag = zip(*lag)  # transpose
             lag = map(list, lag)
@@ -114,16 +120,20 @@ class M_CreateSpatialLag(AbstractModel):
         return pysal.open(self.data['dataFile'], 'r')
 
     def loadWeights(self):
-        wtFile = self.data['wtFiles'][self.data['wtFile']]
-        if issubclass(type(wtFile), basestring):
-            W = pysal.open(wtFile, 'r').read()
-            W.transform = 'r'  # see issue #138
-            return W
-        else:
-            W = wtFile.w
-            if W.transform != 'r':
-                W.transform = 'r'
-            return W
+        try:
+            wtFile = self.data['wtFiles'][self.data['wtFile']]
+            if issubclass(type(wtFile), basestring):
+                W = pysal.open(wtFile, 'r').read()
+                W.transform = 'r'  # see issue #138
+                return W
+            else:
+                W = wtFile.w
+                if W.transform != 'r':
+                    W.transform = 'r'
+                return W            
+        except:
+            return None
+            
 
     def __dataFile(self, value=None):
         if value is not None:
