@@ -168,7 +168,7 @@ def __init_resources():
               <border>5</border>
             </object>
             <object class="sizeritem">
-              <object class="wxStaticBoxSizer">
+              <object class="wxStaticBoxSizer" name="VPeerContainer">
                 <orient>wxVERTICAL</orient>
                 <label>Variables</label>
                 <object class="sizeritem">

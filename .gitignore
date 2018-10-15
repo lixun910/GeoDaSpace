@@ -1,0 +1,8 @@
+
+pyvm/
+build/
+dist/
+
+*.pyc
+*.swp
+

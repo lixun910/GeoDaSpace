@@ -291,14 +291,6 @@ class MyStringIO(StringIO.StringIO):
     def close(self):
         pass
 
-
-class MyTarget(wx.TextDropTarget): 
-    def __init__(self, object): 
-	wx.TextDropTarget.__init__(self) 
-	self.object = object  
-
-    def OnDropText(self, x, y, data): 
-	self.object.SetValue(data) 
 	
 class TextCtrlDropTarget(wx.TextDropTarget):
     def __init__(self, target):
@@ -443,8 +435,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.createSpatialLag = None
 
         # Setup Drop Targets
-	self.Y_TextCtrl.Enable()
-        self.Y_TextCtrl.SetDropTarget(NullDropTarget(self.Y_TextCtrl))
+        self.Y_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.Y_TextCtrl))
         self.YE_ListBox.SetDropTarget(ListBoxDropTarget(self.YE_ListBox))
         self.H_ListBox.SetDropTarget(ListBoxDropTarget(self.H_ListBox))
 
@@ -553,6 +544,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 	bmp_page = wx.ArtProvider.GetBitmap(wx.ART_HELP_PAGE, wx.ART_OTHER)
 	bmp_adv = wx.BitmapFromXPMData(gear_png)
 	
+	self.RegressionToolBar.SetToolBitmapSize((24,24))
 	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolNewModel"), bmp_new, shortHelpString='Create New Model: Choose data file')    
 	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolOpenModel"), bmp_open, shortHelpString='Open Existing Model: Choose .mdl File')    
 	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolSaveModel"), bmp_save, shortHelpString='Save Model..')    

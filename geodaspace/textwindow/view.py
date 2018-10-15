@@ -85,6 +85,8 @@ def __init_resources():
         <label>TOOL</label>
       </object>
       <style>wxTB_FLAT|wxTB_HORIZONTAL</style>
+      <bitmapsize>24,24</bitmapsize>
+      <margins>1,1</margins>
       <XRCED>
         <assign_var>1</assign_var>
       </XRCED>

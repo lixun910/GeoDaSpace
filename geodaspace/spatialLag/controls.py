@@ -160,7 +160,7 @@ class C_CreateSpatialLag(SpatialLag_xrc.xrcCreateSpatialLag):
         # self.SetMinSize(self.GetSize())
 
     def close(self, evt=None):
-        self.Destroy()
+        self.EndModal(wx.ID_CANCEL)
 
     def run(self, evt):
         dpath, dfile = os.path.split(self.model.get('dataFile'))
@@ -181,7 +181,7 @@ class C_CreateSpatialLag(SpatialLag_xrc.xrcCreateSpatialLag):
             dialog.ShowModal()
             self.model.set('dataFile', path)
             if self.dialogMode:
-                self.close()
+                self.EndModal(wx.ID_OK)
 
     def addRow(self, evt=None, varIDX=-1):
         """Add an additional row to the Variables Table"""
@@ -191,18 +191,17 @@ class C_CreateSpatialLag(SpatialLag_xrc.xrcCreateSpatialLag):
 
         # get old width,weight
         width, height = self.GetSize()
-        var = C_spLagVariable(self.panel)
+        
+        parent = self.VariablesPeer.GetParent()
+        var = C_spLagVariable(parent=parent)
         if varIDX != -1:
             var.model.set('var', varIDX, passive=True)
         self.model.addVar(var.model)
-        self.varSizer.Add(var, flag=wx.LEFT | wx.RIGHT | wx.EXPAND)
+        self.varSizer.Add(var, flag=wx.ALL | wx.EXPAND)
         self.varSizer.Layout()
+        
         self.Fit()
-        if not self.width:
-            self.width, height = self.GetSize()
-
-        self.SetMinSize((self.width, self.GetSize()[1]))
-        self.SetSize((width, height))
+        
         self.model.update()
         var.model.update()
 
