@@ -1638,53 +1638,46 @@ long as all the keys have the same number of elements.
 """
 # model_getter[(model_type, endog, inf_lambda, regimes, method)] = model
 model_getter = Wildcard_Dict()
-model_getter[('Standard', False, '*', False, 'ols')] = get_OLS
-model_getter[('Standard', False, '*', True, 'ols')] = get_OLS_regimes
-model_getter[('Standard', True, '*', False, 'gm')] = get_TSLS
-model_getter[('Spatial Lag', True, '*', False, 'gm')] = get_GM_Lag_endog
-model_getter[('Spatial Lag', False, '*', False, 'gm')] = get_GM_Lag_noEndog
-model_getter[('Spatial Error', True, True,
-              False, 'gm')] = get_GM_Endog_Error_Hom
-model_getter[('Spatial Error', False, True, False, 'gm')] = get_GM_Error_Hom
-model_getter[('Spatial Error', True, False, False, 'gm')] = get_GM_Endog_Error
-model_getter[('Spatial Error', False, False, False, 'gm')] = get_GM_Error
-model_getter[('Spatial Lag+Error', True,
-              True, False, 'gm')] = get_GM_Combo_Hom_endog
-model_getter[('Spatial Lag+Error', False,
-              True, False, 'gm')] = get_GM_Combo_Hom_noEndog
-model_getter[('Spatial Lag+Error', True,
-              False, False, 'gm')] = get_GM_Combo_endog
-model_getter[('Spatial Lag+Error', False,
-              False, False, 'gm')] = get_GM_Combo_noEndog
-model_getter[('Standard', True, '*', True, 'gm')] = get_TSLS_regimes
-model_getter[('Spatial Lag', True, '*', True, 'gm')] = get_GM_Lag_endog_regimes
-model_getter[('Spatial Lag', False, '*',
-              True, 'gm')] = get_GM_Lag_noEndog_regimes
-model_getter[('Spatial Error', True, True,
-              True, 'gm')] = get_GM_Endog_Error_Hom_regimes
-model_getter[('Spatial Error', False, True,
-              True, 'gm')] = get_GM_Error_Hom_regimes
-model_getter[('Spatial Error', True, False,
-              True, 'gm')] = get_GM_Endog_Error_regimes
-model_getter[('Spatial Error', False,
-              False, True, 'gm')] = get_GM_Error_regimes
-model_getter[('Spatial Lag+Error', True, True,
-              True, 'gm')] = get_GM_Combo_Hom_endog_regimes
-model_getter[('Spatial Lag+Error', False, True,
-              True, 'gm')] = get_GM_Combo_Hom_noEndog_regimes
-model_getter[('Spatial Lag+Error', True, False,
-              True, 'gm')] = get_GM_Combo_endog_regimes
-model_getter[('Spatial Lag+Error', False, False,
-              True, 'gm')] = get_GM_Combo_noEndog_regimes
-model_getter[('Standard', False, '*', False, 'ml')] = get_error_msg
-model_getter[('Standard', False, '*', True, 'ml')] = get_error_msg
-model_getter[('Spatial Lag', False, '*', False, 'ml')] = get_ML_Lag
-model_getter[('Spatial Lag', False, '*', True, 'ml')] = get_ML_Lag_regimes
-model_getter[('Spatial Error', False, '*', False, 'ml')] = get_ML_Error
-model_getter[('Spatial Error', False, '*', True, 'ml')] = get_ML_Error_regimes
-model_getter[('Spatial Lag+Error', False, '*', False, 'ml')] = get_error_msg
-model_getter[('Spatial Lag+Error', False, '*', True, 'ml')] = get_error_msg
 
+# OLS
+model_getter[('Standard',          False, '*',   False, 'ols')] = get_OLS
+model_getter[('Standard',          False, '*',   True,  'ols')] = get_OLS_regimes
+# GMM
+model_getter[('Standard',          True,  '*',   False, 'gm')] = get_TSLS
+model_getter[('Spatial Lag',       True,  '*',   False, 'gm')] = get_GM_Lag_endog
+model_getter[('Spatial Lag',       False, '*',   False, 'gm')] = get_GM_Lag_noEndog
+model_getter[('Spatial Error',     True,  True,  False, 'gm')] = get_GM_Endog_Error_Hom
+model_getter[('Spatial Error',     False, True,  False, 'gm')] = get_GM_Error_Hom
+model_getter[('Spatial Error',     True,  False, False, 'gm')] = get_GM_Endog_Error
+model_getter[('Spatial Error',     False, False, False, 'gm')] = get_GM_Error
+model_getter[('Spatial Lag+Error', True,  True,  False, 'gm')] = get_GM_Combo_Hom_endog
+model_getter[('Spatial Lag+Error', False, True,  False, 'gm')] = get_GM_Combo_Hom_noEndog
+model_getter[('Spatial Lag+Error', True,  False, False, 'gm')] = get_GM_Combo_endog
+model_getter[('Spatial Lag+Error', False, False, False, 'gm')] = get_GM_Combo_noEndog
+# GMM with regimes
+model_getter[('Standard',          True,  '*',   True,  'gm')] = get_TSLS_regimes
+model_getter[('Spatial Lag',       True,  '*',   True,  'gm')] = get_GM_Lag_endog_regimes
+model_getter[('Spatial Lag',       False, '*',   True,  'gm')] = get_GM_Lag_noEndog_regimes
+model_getter[('Spatial Error',     True,  True,  True,  'gm')] = get_GM_Endog_Error_Hom_regimes
+model_getter[('Spatial Error',     False, True,  True,  'gm')] = get_GM_Error_Hom_regimes
+model_getter[('Spatial Error',     True,  False, True,  'gm')] = get_GM_Endog_Error_regimes
+model_getter[('Spatial Error',     False, False, True,  'gm')] = get_GM_Error_regimes
+model_getter[('Spatial Lag+Error', True,  True,  True,  'gm')] = get_GM_Combo_Hom_endog_regimes
+model_getter[('Spatial Lag+Error', False, True,  True,  'gm')] = get_GM_Combo_Hom_noEndog_regimes
+model_getter[('Spatial Lag+Error', True,  False, True,  'gm')] = get_GM_Combo_endog_regimes
+model_getter[('Spatial Lag+Error', False, False, True,  'gm')] = get_GM_Combo_noEndog_regimes
+# ML
+model_getter[('Standard',          False, '*',   False, 'ml')] = get_error_msg
+model_getter[('Standard',          False, '*',   True,  'ml')] = get_error_msg
+model_getter[('Spatial Lag',       False, '*',   False, 'ml')] = get_ML_Lag
+model_getter[('Spatial Lag',       False, '*',   True,  'ml')] = get_ML_Lag_regimes
+model_getter[('Spatial Error',     False, '*',   False, 'ml')] = get_ML_Error
+model_getter[('Spatial Error',     False, '*',   True,  'ml')] = get_ML_Error_regimes
+model_getter[('Spatial Lag+Error', False, '*',   False, 'ml')] = get_error_msg
+model_getter[('Spatial Lag+Error', False, '*',   True,  'ml')] = get_error_msg
+# SUR
+# model_getter[(model_type, endog, inf_lambda, regimes, time, method)] = model
+model_getter[('Standard',          False, '*',   False, 'sur')] = get_error_msg
 
 def _test():
     import doctest

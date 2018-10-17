@@ -440,11 +440,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.H_ListBox.SetDropTarget(ListBoxDropTarget(self.H_ListBox))
 
         self.R_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.R_TextCtrl))
-        # self.R_TextCtrl.SetDropTarget(NullDropTarget(self.R_TextCtrl))
-        # self.S_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.S_TextCtrl))
-        self.S_TextCtrl.SetDropTarget(NullDropTarget(self.S_TextCtrl))
+        self.S_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.S_TextCtrl))
         self.T_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.T_TextCtrl))
-        # self.T_TextCtrl.SetDropTarget(NullDropTarget(self.T_TextCtrl))
 
         self.X_ListBox.SetDropTarget(ListBoxDropTarget(self.X_ListBox))
 
@@ -484,8 +481,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.R_TextCtrl.Bind(wx.EVT_TEXT, self.updateSpec)
         self.R_TextCtrl.Bind(wx.EVT_LEFT_DCLICK, self.clearTextBox)
         # self.R_TextCtrl.SetToolTipString(R_TOOL_TIP)
-        # self.S_TextCtrl.Bind(wx.EVT_TEXT, self.updateSpec)
-        # self.S_TextCtrl.Bind(wx.EVT_LEFT_DCLICK,self.clearTextBox)
+        self.S_TextCtrl.Bind(wx.EVT_TEXT, self.updateSpec)
+        self.S_TextCtrl.Bind(wx.EVT_LEFT_DCLICK,self.clearTextBox)
         self.T_TextCtrl.Bind(wx.EVT_TEXT, self.updateSpec)
         self.T_TextCtrl.Bind(wx.EVT_LEFT_DCLICK, self.clearTextBox)
         self.X_ListBox.Bind(EVT_LIST_BOX_UPDATE, self.updateSpec)
@@ -645,7 +642,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
             # Not implemented yet
             # self.ModelTypeRadioBox.EnableItem(4,False) #Regimes.Disable()
             # self.R_TextCtrl.Disable()
-            self.S_TextCtrl.Disable()
+            # self.S_TextCtrl.Disable()
             # self.T_TextCtrl.Disable()
 
             # Fixed, always on.
@@ -663,6 +660,16 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 #    self.YE_ListBox.Disable()
                 #    self.H_ListBox.Disable()
 
+		# SUR model for panel data    
+		is_SUR = False
+		if m['spec']['S'] and m['spec']['T'] and \
+		   len(m['spec']['S']) > 0 and len(m['spec']['T']) > 0:
+		    # combo not avaible
+		    self.MT_LAGERR.Disable()
+		    is_SUR = True
+		else:
+		    self.MT_LAGERR.Enable()
+		    
                 if m['modelType']['mType'] == 2 or \
                    m['modelType']['mType'] == 3:
                     # an error model
@@ -725,7 +732,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     self.GMM_radiobutton.Enable()
                     self.GMM_radiobutton.SetValue(True)
                     if m['modelType']['mType'] != 3 and len(m['spec']['H']) == 0\
-                        and len(m['spec']['YE']) == 0:
+                        and len(m['spec']['YE']) == 0 and is_SUR == False:
                         self.ML_radiobutton.Enable()
                     else:
                         self.ML_radiobutton.Disable()
@@ -973,7 +980,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         spec['H'] = H
 
         spec['R'] = self.R_TextCtrl.GetValue()
-        # spec['S'] = self.S_TextCtrl.GetValue()
+        spec['S'] = self.S_TextCtrl.GetValue()
         spec['T'] = self.T_TextCtrl.GetValue()
 
         ## X
@@ -1020,8 +1027,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
             self.H_ListBox.SetItems(spec['H'])
         if not spec['R'] == self.R_TextCtrl.GetValue():
             self.R_TextCtrl.SetValue(spec['R'])
-        # if not spec['S'] == self.S_TextCtrl.GetValue():
-        #    self.S_TextCtrl.SetValue(spec['S'])
+        if not spec['S'] == self.S_TextCtrl.GetValue():
+            self.S_TextCtrl.SetValue(spec['S'])
         if not spec['T'] == self.T_TextCtrl.GetValue():
             self.T_TextCtrl.SetValue(spec['T'])
         if not spec['X'] == self.X_ListBox.GetItems():

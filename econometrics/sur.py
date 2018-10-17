@@ -380,7 +380,7 @@ class SUR(BaseSUR, REGI.Regimes_Frame):
 
         if spat_diag:
             if not w:
-                 raise Exception("Error: spatial weights needed")
+                raise Exception("Error: spatial weights needed")
             WS = w.sparse
             #LM test on spatial error autocorrelation
             self.lmEtest = surLMe(self.n_eq,WS,self.bigE,self.sig)

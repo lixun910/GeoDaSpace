@@ -384,9 +384,13 @@ class guiRegModel(abstractmodel.AbstractModel):
         else:
             name_t = None
             t = None
-        # These options are not available yet....
-        s = None
-        name_s = None
+        # T
+        if data['spec']['S']:
+            name_s = data['spec']['S']
+            s = self.get_col(db, name_s)
+        else:
+            s = None
+            name_s = None
 
         config = data['config']
 
