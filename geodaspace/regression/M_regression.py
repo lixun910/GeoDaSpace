@@ -6,8 +6,7 @@ from geodaspace import abstractmodel
 import pysal
 import numpy as np
 from econometrics.gs_dispatcher import Spmodel
-from econometrics.sur_utils import sur_dictxy
-from econometrics.sur import SUR
+from econometrics.sur_utils import sur_dictxy, sur_dictZ
 from geodaspace.preferences.model import preferencesModel
 from geodaspace.weights.model import GeoDaSpace_W_Obj
 
@@ -411,12 +410,21 @@ class guiRegModel(abstractmodel.AbstractModel):
             y_var0 = name_y.split(',')
             x_var0 = [ x_name.split(',') for x_name in x_names]
             y, x, name_y, x_names = sur_dictxy(db, y_var0, x_var0)
+            
+            yend_var1 = [ name.split(',') for name in ye_names]
+            ye, ye_names = sur_dictZ(db,yend_var1)
+            
+            q_var1 = [ name.split(',') for name in h_names]
+            h, h_names = sur_dictZ(db,q_var1)            
         
         elif len(name_s)>0 and len(name_t) > 0:
             y, x, name_y, x_names = sur_dictxy(db, [name_y], [x_names], space_id=[name_s], time_id=[name_t])
-   
-        #reg0 = SUR(bigy0,bigX0,name_bigy=bigyvars0,name_bigX=bigXvars0)
-        #print reg0.summary
+            
+            yend_var1 = [ name.split(',') for name in ye_names]
+            ye, ye_names = sur_dictZ(db,yend_var1)
+            
+            q_var1 = [ name.split(',') for name in h_names]
+            h, h_names = sur_dictZ(db,q_var1)              
         
         config = data['config']
 

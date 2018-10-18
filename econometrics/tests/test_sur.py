@@ -51,6 +51,7 @@ class Test_SUR(unittest.TestCase):
         reg = SUR(bigy0,bigX0,w=self.w,nonspat_diag=True,spat_diag=True,iter=True,verbose=False,\
             name_bigy=bigyvars0,name_bigX=bigXvars0)
 
+        print reg
         dict_compare(reg.bOLS,{0: np.array([[ 5.39719146],[ 0.6973813 ],\
         [ 0.22566378]]), 1: np.array([[ 1.80829725],[ 1.03504143],[ 0.6582483 ]])},RTOL)
         dict_compare(reg.bSUR,{0: np.array([[ 5.18423225],[ 0.67757925],\
@@ -112,6 +113,9 @@ class Test_SUR(unittest.TestCase):
         bigq1,bigqvars1 = sur_dictZ(self.db,q_var1)
         reg = ThreeSLS(bigy1,bigX1,bigyend1,bigq1)
 
+        print 'test_3SLS'
+        print reg.summary
+        
         dict_compare(reg.b3SLS,{0: np.array([[  6.92426353e+00],[  1.42921826e+00],[  4.94348442e-04],\
         [  3.58292750e+00]]), 1: np.array([[ 7.62385875],[ 1.65031181],[-0.21682974],[ 3.91250428]])},RTOL)
         dict_compare(reg.tsls_inf,{0: np.array([[  2.32208525e-001,   2.98191616e+001,   2.20522747e-195],\

@@ -876,23 +876,20 @@ def get_OLS(gui):
     return output
 
 def get_SUR(gui):
-    reg = SUR(gui.y, gui.x, name_bigy=gui.name_y, name_bigX=gui.name_x,
-              nonspat_diag=gui.ols_diag, spat_diag=False,
-              name_ds=gui.name_ds)
-    if gui.predy_resid:  # write out predicted values and residuals
-        gui.pred_res, gui.header_pr, counter = collect_predy_resid(
-            gui.pred_res, gui.header_pr, reg, 'standard_',
-            False, 0, 0)
     if gui.w_list and gui.spat_diag:
         output = []
         for w in gui.w_list:
+            reg = SUR(gui.y, gui.x, w=w, name_bigy=gui.name_y, name_bigX=gui.name_x,
+                      spat_diag=gui.spat_diag, iter=True, name_ds=gui.name_ds)
+            
             # add spatial diagnostics for each W
             reg_spat = COPY.copy(reg)
             reg_spat.name_w = w.name
             #SUMMARY.spat_diag_ols(reg=reg_spat, w=w, moran=gui.moran)
             #SUMMARY.summary(reg=reg_spat, vm=gui.vc_matrix, instruments=False, nonspat_diag=gui.ols_diag, spat_diag=True)
-            #output.append(reg_spat)
+            output.append(reg_spat)
     else:
+        reg = SUR(gui.y, gui.x, name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds)
         output = [reg]
     #robust_regs = get_white_hac_standard(reg, gui)
     #for rob_reg in robust_regs:
@@ -900,6 +897,13 @@ def get_SUR(gui):
     #    SUMMARY.summary(reg=rob_reg, vm=gui.vc_matrix, instruments=False,
     #                    nonspat_diag=gui.ols_diag, spat_diag=gui.spat_diag)
     #output.extend(robust_regs)
+    return output
+
+def get_SUR_endog(gui):
+    reg = ThreeSLS(gui.y, gui.x, gui.ye, gui.h, 
+                   name_bigy=gui.name_y, name_bigX=gui.name_x, 
+                   name_bigyend=gui.name_ye, name_bigq=gui.name_h, name_ds=gui.name_ds)        
+    output = [reg]
     return output
 
 
@@ -1712,7 +1716,7 @@ model_getter[('Spatial Lag+Error', False, '*',   True,  False, 'ml')] = get_erro
 # SUR: only gmm -- 2TLS  3TLS
 # model_getter[(model_type, endog, inf_lambda, regimes, time, method)] = model
 model_getter[('Standard',          False, '*',   False, True, 'gm')] = get_SUR
-#model_getter[('Standard',          True,  '*',   False, True, 'gm')] = get_SUR_endog
+model_getter[('Standard',          True,  '*',   False, True, 'gm')] = get_SUR_endog
 #model_getter[('Standard',          False, '*',   True,  True, 'gm')] = get_SUR_regimes
 #model_getter[('Standard',          True,  '*',   True,  True, 'gm')] = get_SUR_endog_regimes
 
