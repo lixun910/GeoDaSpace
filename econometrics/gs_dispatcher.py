@@ -571,7 +571,7 @@ class Spmodel:
         else:
             regi = False
 
-        if name_t and name_s:
+        if isinstance(name_y, dict) or (name_t and name_s):
             st = True
         else:
             st = False
@@ -876,13 +876,9 @@ def get_OLS(gui):
     return output
 
 def get_SUR(gui):
-    y_var0 = gui.y
-    x_var0 = gui.x
-    bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(self.db,y_var0,x_var0, space_id=gui.s, time_id=gui.t)
-    reg = OLS(y=gui.y, x=gui.x,
-              nonspat_diag=gui.ols_diag, white_test=gui.white_test, spat_diag=False,
-              vm=gui.vc_matrix, name_y=gui.name_y, name_x=gui.name_x, name_ds=gui.name_ds,
-              sig2n_k=gui.sig2n_k_ols)
+    reg = SUR(gui.y, gui.x, name_bigy=gui.name_y, name_bigX=gui.name_x,
+              nonspat_diag=gui.ols_diag, spat_diag=False,
+              name_ds=gui.name_ds)
     if gui.predy_resid:  # write out predicted values and residuals
         gui.pred_res, gui.header_pr, counter = collect_predy_resid(
             gui.pred_res, gui.header_pr, reg, 'standard_',
@@ -893,18 +889,17 @@ def get_SUR(gui):
             # add spatial diagnostics for each W
             reg_spat = COPY.copy(reg)
             reg_spat.name_w = w.name
-            SUMMARY.spat_diag_ols(reg=reg_spat, w=w, moran=gui.moran)
-            SUMMARY.summary(reg=reg_spat, vm=gui.vc_matrix, instruments=False,
-                            nonspat_diag=gui.ols_diag, spat_diag=True)
-            output.append(reg_spat)
+            #SUMMARY.spat_diag_ols(reg=reg_spat, w=w, moran=gui.moran)
+            #SUMMARY.summary(reg=reg_spat, vm=gui.vc_matrix, instruments=False, nonspat_diag=gui.ols_diag, spat_diag=True)
+            #output.append(reg_spat)
     else:
         output = [reg]
-    robust_regs = get_white_hac_standard(reg, gui)
-    for rob_reg in robust_regs:
-        SUMMARY.beta_diag_ols(rob_reg, rob_reg.robust)
-        SUMMARY.summary(reg=rob_reg, vm=gui.vc_matrix, instruments=False,
-                        nonspat_diag=gui.ols_diag, spat_diag=gui.spat_diag)
-    output.extend(robust_regs)
+    #robust_regs = get_white_hac_standard(reg, gui)
+    #for rob_reg in robust_regs:
+    #    SUMMARY.beta_diag_ols(rob_reg, rob_reg.robust)
+    #    SUMMARY.summary(reg=rob_reg, vm=gui.vc_matrix, instruments=False,
+    #                    nonspat_diag=gui.ols_diag, spat_diag=gui.spat_diag)
+    #output.extend(robust_regs)
     return output
 
 

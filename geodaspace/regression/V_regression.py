@@ -305,13 +305,22 @@ class TextCtrlDropTarget(wx.TextDropTarget):
         self.GetData()
         text = self.text_obj.GetData()
         self.target.Clear()
+	
+	main_ui = self.target
+	while main_ui.Parent:
+	    main_ui = main_ui.Parent
+	
+	if isinstance(main_ui, geodaspace.regression.V_regression.guiRegView):
+	    if main_ui.spacetimeKeyDown:
+		if text.find(',') >= 0:
+		    # multi-variables (SUR -- e.g. HR80, HR90)
+		    self.target.SetValue(text)
+		    return default
+        
         self.target.SetValue(text.split(',')[0])
-        if ',' in text:
-            print "This field can only accept one value.\
-                    We'll take the first."
-            print text
-        return default
-
+	if ',' in text:
+	    print "This field can only accept one value unless you hold the 'S' or 'T' key."
+	return default
 
 class NullDropTarget(wx.TextDropTarget):
     def __init__(self, targetListBox):
@@ -356,8 +365,23 @@ class ListBoxDropTarget(wx.TextDropTarget):
                     self.targetListBox.Delete(idx)
                     if idx < hitidx:
                         hitidx -= 1
-            # Insert Drop Item(s).
-            self.targetListBox.InsertItems(itms, hitidx)
+				    
+	    # If hold 's' or 't' key, create time grouped variable
+	    time_variable = False
+	    main_ui = self.targetListBox
+	    while main_ui.Parent:
+		main_ui = main_ui.Parent
+	    if isinstance(main_ui, geodaspace.regression.V_regression.guiRegView):
+		if main_ui.spacetimeKeyDown:
+		    if text.find(',') >= 0:
+			# multi-variables (SUR -- e.g. HR80, HR90)
+			self.targetListBox.InsertItems([text], hitidx)
+			time_variable = True
+		   
+	    if time_variable == False: 
+		# Insert Drop Item(s).
+		self.targetListBox.InsertItems(itms, hitidx)
+		
             # Fire my custom event type
             evt = ListBoxUpdateEvent(
                 myEVT_LIST_BOX_UPDATE, self.targetListBox.GetId())
@@ -580,7 +604,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.METHOD = [
             self.OLS_radiobutton, self.GMM_radiobutton, self.ML_radiobutton]
         self.populate(None)
-
+	
     def _startDrag(self, evt):
         if evt.Dragging():
             to_drag = None
@@ -664,9 +688,23 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 		is_SUR = False
 		if m['spec']['S'] and m['spec']['T'] and \
 		   len(m['spec']['S']) > 0 and len(m['spec']['T']) > 0:
-		    # combo not avaible
-		    self.MT_LAGERR.Disable()
 		    is_SUR = True
+		elif m['spec']['y'].find(',') >= 0:
+		    is_SUR = True 
+		    self.T_TextCtrl.Disable()
+		    self.S_TextCtrl.Disable()
+		    self.T_TextCtrl.SetDropTarget(NullDropTarget(self.T_TextCtrl))
+		    self.S_TextCtrl.SetDropTarget(NullDropTarget(self.S_TextCtrl))
+		    for spec_x in m['spec']['X']:
+			if spec_x.find(',') < 0:
+			    is_SUR = False  
+		else:
+		    self.T_TextCtrl.Enable()
+		    self.S_TextCtrl.Enable()
+		    
+		if is_SUR:
+    		    # combo not avaible for SUR
+		    self.MT_LAGERR.Disable()
 		else:
 		    self.MT_LAGERR.Enable()
 		    
@@ -1059,11 +1097,12 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 self.model.removeKW(evt.Selection)
         elif type(evt) == wx.KeyEvent:
             code = evt.GetKeyCode()
+	    selection = None
             if code in [wx.WXK_BACK, wx.WXK_DELETE]:
                 selection = evt.EventObject.GetSelection()
-            if evt.EventObject == self.MWeights_ListBox:
+            if evt.EventObject == self.MWeights_ListBox and selection:
                 self.model.removeMW(selection)
-            if evt.EventObject == self.KWeights_ListBox:
+            if evt.EventObject == self.KWeights_ListBox and selection:
                 self.model.removeKW(selection)
         elif evt.GetEventType() == wx.EVT_BUTTON.typeId:
             if evt.EventObject == self.PropMWeightsButton:

@@ -336,29 +336,42 @@ class guiRegModel(abstractmodel.AbstractModel):
                 db = pysal.open(data['fname'], 'r')
         else:
             return None
+        
         # y
         name_y = data['spec']['y']
-        y = np.array([self.get_col(db, name_y)]).T
+        if name_y.find(',') >= 0:
+            y = np.array([self.get_col(db, name) for name in name_y.split(',')]).T
+        else:
+            y = np.array([self.get_col(db, name_y)]).T
 
         # x
         x = []
         x_names = data['spec']['X']
         for x_name in x_names:
-            x.append(self.get_col(db, x_name))
+            if x_name.find(',') >= 0:
+                x.append([self.get_col(db, name) for name in x_name.split(',')])                
+            else:
+                x.append(self.get_col(db, x_name))
         x = np.array(x).T
 
         # YE
         ye = []
         ye_names = data['spec']['YE']
         for ye_name in ye_names:
-            ye.append(self.get_col(db, ye_name))
+            if ye_name.find(',') >= 0:
+                ye.append([self.get_col(db, name) for name in ye_name.split(',')])
+            else:
+                ye.append(self.get_col(db, ye_name))
         ye = np.array(ye).T
 
         # H
         h = []
         h_names = data['spec']['H']
         for h_name in h_names:
-            h.append(self.get_col(db, h_name))
+            if h_name.find(',') >= 0:
+                h.append([self.get_col(db, name) for name in h_name.split(',')])
+            else:
+                h.append(self.get_col(db, h_name))
         h = np.array(h).T
 
         mtypes = {0: 'Standard', 1: 'Spatial Lag',
@@ -394,9 +407,16 @@ class guiRegModel(abstractmodel.AbstractModel):
             s = None
             name_s = None
         
-        bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(db, [name_y], [x_names], space_id=[name_s], time_id=[name_t])
-        reg0 = SUR(bigy0,bigX0,name_bigy=bigyvars0,name_bigX=bigXvars0)
-        print reg0.summary
+        if name_y.find(',') >= 0:
+            y_var0 = name_y.split(',')
+            x_var0 = [ x_name.split(',') for x_name in x_names]
+            y, x, name_y, x_names = sur_dictxy(db, y_var0, x_var0)
+        
+        elif len(name_s)>0 and len(name_t) > 0:
+            y, x, name_y, x_names = sur_dictxy(db, [name_y], [x_names], space_id=[name_s], time_id=[name_t])
+   
+        #reg0 = SUR(bigy0,bigX0,name_bigy=bigyvars0,name_bigX=bigXvars0)
+        #print reg0.summary
         
         config = data['config']
 

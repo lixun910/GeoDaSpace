@@ -73,7 +73,20 @@ class vVariableSelector(wx.MiniFrame):
         self.values = values
         self.populate()
         # self.panel.ToolBar.Hide()
+        
+        self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+        self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)          
+        self.sourcelist.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+        self.sourcelist.Bind(wx.EVT_KEY_UP, self.OnKeyUp)        
 
+    def OnKeyDown(self, event):
+        keycode = event.GetKeyCode()
+        if keycode == wx.WXK_ALT:
+            self.Parent.spacetimeKeyDown = True
+        
+    def OnKeyUp(self, event):
+        self.Parent.spacetimeKeyDown = False
+        
     def Search(self, text, inclusive):
         if inclusive:
             self.populate(
