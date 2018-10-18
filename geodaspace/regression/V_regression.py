@@ -724,9 +724,11 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 
 		# the matrix
                 if len(m['spec']['H']) > 0 or len(m['spec']['YE']) > 0\
-                    or m['modelType']['mType'] != 0:
+                    or m['modelType']['mType'] != 0 or is_SUR:
+		    
                     if m['modelType']['method'] == 0: #set GMM default
                         m['modelType']['method'] = 1
+			
                     self.OLS_radiobutton.SetValue(False)
                     self.OLS_radiobutton.Disable()
                     self.GMM_radiobutton.Enable()
