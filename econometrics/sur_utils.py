@@ -82,7 +82,7 @@ def sur_dictxy(db,y_vars,x_vars,space_id=None,time_id=None):
         n_eq = len(tt1)
         tt2 = list(tt1)
         tt2.sort()
-        tt3 = [str(int(a)+1) for a in tt2]
+        tt3 = [str(a) for a in tt2] 
         n = bign/n_eq
         try:
             longx = np.array([db[name] for name in x_vars[0]]).T            
@@ -92,35 +92,26 @@ def sur_dictxy(db,y_vars,x_vars,space_id=None,time_id=None):
         xvars = x_vars[0][:]
         xvars.insert(0,c)
         
-        st_dict = {}
+        tmpy = { t : {} for t in tt1 }
+        tmpX = { t : {} for t in tt1 }
         for i in range(bign):
-            st_dict[(ss[i][0], tt[i][0])] = i
-            
-        
-        bigy = {i:np.zeros(shape=(n,1)) for i in range(n_eq)}
-        bigx = {i:np.zeros(shape=(n,len(xvars))) for i in range(n_eq)}
-        bigy_vars = {i:None for i in range(n_eq)}
-        bigX_vars = {i:None for i in range(n_eq)}
-        for i in range(bign):
-            sval = spaceid_col[i]  # e.g. 27077   53019
-            tval = timeid_col[i]   # e.g. 1960    1960
-            sid = sdic[sval]   # e.g. 0  1
-            tid = tdic[tval]   # e.g  0  0 
-            bigy[tid][sid] = y[i]
-            bigX[tid][sid] = longxc[i]
+            sval = ss[i][0]  # e.g. 27077
+            tval = tt[i][0]   # e.g. 1960
+            if tmpy.has_key(tval):
+                tmpy[tval][sval] = y[i]
+            if tmpX.has_key(tval):
+                tmpX[tval][sval] = longxc[i]
         
         bigy = {}
         bigX = {}
         bigy_vars = {}
         bigX_vars = {}
         for r in range(n_eq):
-            k0 = r * n
-            ke = r * n + n
-            bigy[r] = y[k0:ke,:]
+            tval = tt2[r]
+            bigy[r] = np.array(tmpy[tval].values())
+            bigX[r] = np.array(tmpX[tval].values())
             bigy_vars[r] = y_vars[0] + "_" + tt3[r]
-            bigX[r] = longxc[k0:ke,:]
-            bxvars = [i + "_" + tt3[r] for i in xvars]
-            bigX_vars[r] = bxvars
+            bigX_vars[r] = [i + "_" + tt3[r] for i in xvars]
         return (bigy,bigX,bigy_vars,bigX_vars)
     else:
         print("error message, but should never be here")

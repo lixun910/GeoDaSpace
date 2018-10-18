@@ -7,6 +7,7 @@ import pysal
 import numpy as np
 from econometrics.gs_dispatcher import Spmodel
 from econometrics.sur_utils import sur_dictxy
+from econometrics.sur import SUR
 from geodaspace.preferences.model import preferencesModel
 from geodaspace.weights.model import GeoDaSpace_W_Obj
 
@@ -394,7 +395,9 @@ class guiRegModel(abstractmodel.AbstractModel):
             name_s = None
         
         bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(db, [name_y], [x_names], space_id=[name_s], time_id=[name_t])
-
+        reg0 = SUR(bigy0,bigX0,name_bigy=bigyvars0,name_bigX=bigXvars0)
+        print reg0.summary
+        
         config = data['config']
 
         if self.getMWeightsEnabled() and model_type in \
