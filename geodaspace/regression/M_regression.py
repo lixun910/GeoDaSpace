@@ -6,6 +6,7 @@ from geodaspace import abstractmodel
 import pysal
 import numpy as np
 from econometrics.gs_dispatcher import Spmodel
+from econometrics.sur_utils import sur_dictxy
 from geodaspace.preferences.model import preferencesModel
 from geodaspace.weights.model import GeoDaSpace_W_Obj
 
@@ -384,13 +385,15 @@ class guiRegModel(abstractmodel.AbstractModel):
         else:
             name_t = None
             t = None
-        # T
+        # S
         if data['spec']['S']:
             name_s = data['spec']['S']
             s = self.get_col(db, name_s)
         else:
             s = None
             name_s = None
+        
+        bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(db, [name_y], [x_names], space_id=[name_s], time_id=[name_t])
 
         config = data['config']
 

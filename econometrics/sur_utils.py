@@ -71,6 +71,10 @@ def sur_dictxy(db,y_vars,x_vars,space_id=None,time_id=None):
             y = np.array([db.by_col(name) for name in y_vars]).T            
         bign = y.shape[0]
         try:
+            ss = np.array([db[name] for name in space_id]).T
+        except:
+            ss = np.array([db.by_col(name) for name in space_id]).T        
+        try:
             tt = np.array([db[name] for name in time_id]).T
         except:
             tt = np.array([db.by_col(name) for name in time_id]).T
@@ -87,6 +91,24 @@ def sur_dictxy(db,y_vars,x_vars,space_id=None,time_id=None):
         longxc = np.hstack((np.ones((bign, 1)), longx))
         xvars = x_vars[0][:]
         xvars.insert(0,c)
+        
+        st_dict = {}
+        for i in range(bign):
+            st_dict[(ss[i][0], tt[i][0])] = i
+            
+        
+        bigy = {i:np.zeros(shape=(n,1)) for i in range(n_eq)}
+        bigx = {i:np.zeros(shape=(n,len(xvars))) for i in range(n_eq)}
+        bigy_vars = {i:None for i in range(n_eq)}
+        bigX_vars = {i:None for i in range(n_eq)}
+        for i in range(bign):
+            sval = spaceid_col[i]  # e.g. 27077   53019
+            tval = timeid_col[i]   # e.g. 1960    1960
+            sid = sdic[sval]   # e.g. 0  1
+            tid = tdic[tval]   # e.g  0  0 
+            bigy[tid][sid] = y[i]
+            bigX[tid][sid] = longxc[i]
+        
         bigy = {}
         bigX = {}
         bigy_vars = {}

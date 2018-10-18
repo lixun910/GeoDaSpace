@@ -20,6 +20,8 @@ import robust as ROBUST
 import summary_output as SUMMARY
 import user_output as USER
 import regimes as REGI
+from sur_utils import sur_dictxy, sur_dictZ
+from sur import SUR, ThreeSLS
 
 INV_METHODS = ("Power Expansion", "True Inverse",)
 ML_METHODS = ("Full", "Ord",)
@@ -873,6 +875,38 @@ def get_OLS(gui):
     output.extend(robust_regs)
     return output
 
+def get_SUR(gui):
+    y_var0 = gui.y
+    x_var0 = gui.x
+    bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(self.db,y_var0,x_var0, space_id=gui.s, time_id=gui.t)
+    reg = OLS(y=gui.y, x=gui.x,
+              nonspat_diag=gui.ols_diag, white_test=gui.white_test, spat_diag=False,
+              vm=gui.vc_matrix, name_y=gui.name_y, name_x=gui.name_x, name_ds=gui.name_ds,
+              sig2n_k=gui.sig2n_k_ols)
+    if gui.predy_resid:  # write out predicted values and residuals
+        gui.pred_res, gui.header_pr, counter = collect_predy_resid(
+            gui.pred_res, gui.header_pr, reg, 'standard_',
+            False, 0, 0)
+    if gui.w_list and gui.spat_diag:
+        output = []
+        for w in gui.w_list:
+            # add spatial diagnostics for each W
+            reg_spat = COPY.copy(reg)
+            reg_spat.name_w = w.name
+            SUMMARY.spat_diag_ols(reg=reg_spat, w=w, moran=gui.moran)
+            SUMMARY.summary(reg=reg_spat, vm=gui.vc_matrix, instruments=False,
+                            nonspat_diag=gui.ols_diag, spat_diag=True)
+            output.append(reg_spat)
+    else:
+        output = [reg]
+    robust_regs = get_white_hac_standard(reg, gui)
+    for rob_reg in robust_regs:
+        SUMMARY.beta_diag_ols(rob_reg, rob_reg.robust)
+        SUMMARY.summary(reg=rob_reg, vm=gui.vc_matrix, instruments=False,
+                        nonspat_diag=gui.ols_diag, spat_diag=gui.spat_diag)
+    output.extend(robust_regs)
+    return output
+
 
 def get_TSLS(gui):
     reg = TSLS(y=gui.y, x=gui.x, yend=gui.ye, q=gui.h,
@@ -1682,7 +1716,7 @@ model_getter[('Spatial Lag+Error', False, '*',   False, False, 'ml')] = get_erro
 model_getter[('Spatial Lag+Error', False, '*',   True,  False, 'ml')] = get_error_msg
 # SUR: only gmm -- 2TLS  3TLS
 # model_getter[(model_type, endog, inf_lambda, regimes, time, method)] = model
-#model_getter[('Standard',          False, '*',   False, True, 'gm')] = get_SUR
+model_getter[('Standard',          False, '*',   False, True, 'gm')] = get_SUR
 #model_getter[('Standard',          True,  '*',   False, True, 'gm')] = get_SUR_endog
 #model_getter[('Standard',          False, '*',   True,  True, 'gm')] = get_SUR_regimes
 #model_getter[('Standard',          True,  '*',   True,  True, 'gm')] = get_SUR_endog_regimes
