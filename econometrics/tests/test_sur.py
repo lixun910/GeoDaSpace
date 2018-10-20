@@ -145,6 +145,9 @@ class Test_SUR(unittest.TestCase):
                name_bigX=bigXvars2,name_bigyend=bigyendvars2,\
                name_bigq=bigqvars2,name_ds="natregimes")
 
+        print 'test_3SLS_uneqK'
+        print reg.summary
+        
         dict_compare(reg.b2SLS,{0: np.array([[-2.04160355],[ 4.5438992 ],[ 1.65007567],[-0.73163458],\
         [ 5.43071683]]), 1: np.array([[ 17.26252005],[  5.17297895],[  1.2893243 ],[ -0.38349609],\
         [ -2.17689289],[  4.31713382]]), 2: np.array([[-7.6809159 ],[ 3.88957396],[ 0.49973258],\

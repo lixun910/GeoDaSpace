@@ -22,6 +22,8 @@ import user_output as USER
 import regimes as REGI
 from sur_utils import sur_dictxy, sur_dictZ
 from sur import SUR, ThreeSLS
+from sur_lag import SURlagIV
+from sur_error import SURerrorGM, SURerrorML
 
 INV_METHODS = ("Power Expansion", "True Inverse",)
 ML_METHODS = ("Full", "Ord",)
@@ -879,32 +881,86 @@ def get_SUR(gui):
     if gui.w_list and gui.spat_diag:
         output = []
         for w in gui.w_list:
-            reg = SUR(gui.y, gui.x, w=w, name_bigy=gui.name_y, name_bigX=gui.name_x,
+            reg = SUR(gui.y, gui.x, w=w, name_w=w.name, name_bigy=gui.name_y, name_bigX=gui.name_x,
                       spat_diag=gui.spat_diag, iter=True, name_ds=gui.name_ds)
-            
-            # add spatial diagnostics for each W
-            reg_spat = COPY.copy(reg)
-            reg_spat.name_w = w.name
-            #SUMMARY.spat_diag_ols(reg=reg_spat, w=w, moran=gui.moran)
-            #SUMMARY.summary(reg=reg_spat, vm=gui.vc_matrix, instruments=False, nonspat_diag=gui.ols_diag, spat_diag=True)
-            output.append(reg_spat)
+            output.append(reg)
     else:
         reg = SUR(gui.y, gui.x, name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds)
         output = [reg]
-    #robust_regs = get_white_hac_standard(reg, gui)
-    #for rob_reg in robust_regs:
-    #    SUMMARY.beta_diag_ols(rob_reg, rob_reg.robust)
-    #    SUMMARY.summary(reg=rob_reg, vm=gui.vc_matrix, instruments=False,
-    #                    nonspat_diag=gui.ols_diag, spat_diag=gui.spat_diag)
-    #output.extend(robust_regs)
+    return output
+
+def get_SUR_regimes(gui):
+    if gui.w_list and gui.spat_diag:
+        output = []
+        for w in gui.w_list:
+            reg = SUR(gui.y, gui.x, w=w, name_w=w.name, regimes=gui.r, name_regimes=gui.name_r, 
+                      name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds,
+                      spat_diag=gui.spat_diag, iter=True)
+            output.append(reg)
+    else:
+        reg = SUR(gui.y, gui.x, regimes=gui.r, name_regimes=gui.name_r, 
+                  name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds,
+                  spat_diag=gui.spat_diag, iter=True)        
+        output = [reg]    
     return output
 
 def get_SUR_endog(gui):
+    # no weights support
     reg = ThreeSLS(gui.y, gui.x, gui.ye, gui.h, 
                    name_bigy=gui.name_y, name_bigX=gui.name_x, 
                    name_bigyend=gui.name_ye, name_bigq=gui.name_h, name_ds=gui.name_ds)        
     output = [reg]
     return output
+
+def get_ML_SUR_error(gui):
+    output = []
+    counter = 1
+    for w in gui.w_list:
+        reg = SURerrorML(gui.y, gui.x, w=w, w_lags=gui.instrument_lags, vm=gui.vc_matrix,
+                       name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds)
+        output.append(reg)
+        counter += 1
+    return output        
+
+def get_GM_SUR_error(gui):
+    output = []
+    counter = 1
+    for w in gui.w_list:
+        reg = SURerrorGM(gui.y, gui.x, w=w, w_lags=gui.instrument_lags, vm=gui.vc_matrix,
+                         #spat_diag=False, nonspat_diag=True,
+                         name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds)
+        output.append(reg)
+        counter += 1
+    return output     
+
+def get_GM_SUR_Lag_noEndog(gui):
+    output = []
+    counter = 1
+    for w in gui.w_list:
+        reg = SURlagIV(gui.y, gui.x, w=w, w_lags=gui.instrument_lags, vm=gui.vc_matrix,
+                       name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds)
+        output.append(reg)
+        counter += 1
+    return output    
+
+def get_GM_SUR_Lag_endog(gui):
+    output = []
+    counter = 1
+    for w in gui.w_list:
+        reg = SURlagIV(gui.y, gui.x, gui.ye, gui.h, w=w, w_lags=gui.instrument_lags, 
+                       spat_diag=True, lag_q=gui.lag_user_inst, vm=gui.vc_matrix,
+                       name_bigy=gui.name_y, name_bigX=gui.name_x, 
+                       name_bigyend=gui.name_ye, name_bigq=gui.name_h, name_ds=gui.name_ds)
+        output.append(reg)
+        counter += 1
+    robust_regs = get_white_hac_lag(reg, gui, output)
+    for rob_reg in robust_regs:
+        SUMMARY.beta_diag_lag(rob_reg, rob_reg.robust)
+        SUMMARY.build_coefs_body_instruments(rob_reg)
+        SUMMARY.summary(reg=rob_reg, vm=gui.vc_matrix, instruments=True,
+                        nonspat_diag=False, spat_diag=gui.spat_diag)
+    output.extend(robust_regs)
+    return output    
 
 
 def get_TSLS(gui):
@@ -1715,13 +1771,14 @@ model_getter[('Spatial Lag+Error', False, '*',   False, False, 'ml')] = get_erro
 model_getter[('Spatial Lag+Error', False, '*',   True,  False, 'ml')] = get_error_msg
 # SUR: only gmm -- 2TLS  3TLS
 # model_getter[(model_type, endog, inf_lambda, regimes, time, method)] = model
-model_getter[('Standard',          False, '*',   False, True, 'gm')] = get_SUR
-model_getter[('Standard',          True,  '*',   False, True, 'gm')] = get_SUR_endog
+model_getter[('Standard',          False, '*',   False, True,  'gm')] = get_SUR
+model_getter[('Standard',          False, '*',   True,  True,  'gm')] = get_SUR_regimes
+model_getter[('Standard',          True,  '*',   False, True,  'gm')] = get_SUR_endog
 #model_getter[('Standard',          False, '*',   True,  True, 'gm')] = get_SUR_regimes
 #model_getter[('Standard',          True,  '*',   True,  True, 'gm')] = get_SUR_endog_regimes
 
-#model_getter[('Spatial Lag',       True,  '*',   False, True, 'gm')] = get_SUR_Lag_endog
-#model_getter[('Spatial Lag',       False, '*',   False, True, 'gm')] = get_SUR_Lag_noEndog
+model_getter[('Spatial Lag',       True,  '*',   False, True, 'gm')] = get_GM_SUR_Lag_endog
+model_getter[('Spatial Lag',       False, '*',   False, True, 'gm')] = get_GM_SUR_Lag_noEndog
 #model_getter[('Spatial Error',     True,  True,  False, True, 'gm')] = get_SUR_Endog_Error_Hom
 #model_getter[('Spatial Error',     False, True,  False, True, 'gm')] = get_SUR_Error_Hom
 #model_getter[('Spatial Error',     True,  False, False, True, 'gm')] = get_SUR_Endog_Error

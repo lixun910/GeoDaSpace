@@ -22,6 +22,7 @@ class Test_SURlagIV(unittest.TestCase):
         reg = SURlagIV(bigy0,bigX0,w=self.w,name_bigy=bigyvars0,name_bigX=bigXvars0,\
                name_ds="NAT",name_w="nat_queen")
 
+        
         dict_compare(reg.b3SLS,{0: np.array([[ 4.79766641],[ 0.66900706],[ 0.45430715],\
         [-0.13665465]]), 1: np.array([[ 2.27972563],[ 0.99252289],[ 0.52280565],[ 0.06909469]])},RTOL)
         dict_compare(reg.tsls_inf,{0: np.array([[  4.55824001e+00,   1.05252606e+00,   2.92558259e-01],\
@@ -46,6 +47,9 @@ class Test_SURlagIV(unittest.TestCase):
         reg = SURlagIV(bigy1,bigX1,w=self.w,name_bigy=bigyvars1,name_bigX=bigXvars1,\
                name_ds="NAT",name_w="nat_queen")
 
+
+        print reg.summary
+        
         dict_compare(reg.b2SLS,{0: np.array([[ 2.42754085],[ 1.48928052],[ 0.33812558],\
         [ 0.45567848]]), 1: np.array([[ 4.83887747],[ 2.86272903],[ 0.96950417],\
         [-0.12928124],[ 0.33328525]]), 2: np.array([[ 6.69407561],[ 3.81449588],\

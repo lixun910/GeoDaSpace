@@ -348,10 +348,11 @@ class guiRegModel(abstractmodel.AbstractModel):
         x_names = data['spec']['X']
         for x_name in x_names:
             if x_name.find(',') >= 0:
-                x.append([self.get_col(db, name) for name in x_name.split(',')])                
+                x = None
+                #x.append([self.get_col(db, name) for name in x_name.split(',')])                
             else:
                 x.append(self.get_col(db, x_name))
-        x = np.array(x).T
+                x = np.array(x).T
 
         # YE
         ye = []
@@ -417,7 +418,7 @@ class guiRegModel(abstractmodel.AbstractModel):
             q_var1 = [ name.split(',') for name in h_names]
             h, h_names = sur_dictZ(db,q_var1)            
         
-        elif len(name_s)>0 and len(name_t) > 0:
+        elif name_s and name_t and len(name_s)>0 and len(name_t) > 0:
             y, x, name_y, x_names = sur_dictxy(db, [name_y], [x_names], space_id=[name_s], time_id=[name_t])
             
             yend_var1 = [ name.split(',') for name in ye_names]

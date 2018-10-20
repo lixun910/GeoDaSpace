@@ -469,6 +469,9 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 
         self.X_ListBox.SetDropTarget(ListBoxDropTarget(self.X_ListBox))
 
+	# SUR: space-time key down (Alt)
+	self.spacetimeKeyDown = False
+	
         # The Model
         self.model = M_regression.guiRegModel()
         self.model.data['config'] = self.config.GetPrefs()
