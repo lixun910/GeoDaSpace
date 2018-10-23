@@ -86,6 +86,7 @@ class Test_SUR_error(unittest.TestCase):
         reg = SURerrorML(bigy1,bigX1,self.w,name_bigy=bigyvars1,name_bigX=bigXvars1,\
             name_w="natqueen",name_ds="natregimes")        
 
+        print reg.summary
         dict_compare(reg.bSUR0,{0: np.array([[ 4.50407527],[ 2.39199682],[ 0.52723694]]), 1: np.array([[ 7.44509818],\
         [ 3.74968571],[ 1.28811685],[-0.23526451]]), 2: np.array([[ 6.92761614],[ 3.65423052],\
         [ 1.38247611]])},RTOL)
@@ -152,6 +153,7 @@ class Test_SUR_error_gm(unittest.TestCase):
         reg = SURerrorGM(bigy1,bigX1,self.w,name_bigy=bigyvars1,name_bigX=bigXvars1,\
             name_w="natqueen",name_ds="natregimes")        
 
+        print reg.summary
         dict_compare(reg.bSUR,{0: np.array([[ 4.46897583],
        [ 2.15287009],
        [ 0.5979781 ]]), 1: np.array([[ 7.10380031],

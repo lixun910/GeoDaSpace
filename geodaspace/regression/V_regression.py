@@ -694,6 +694,10 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 		    is_SUR = True
 		elif m['spec']['y'].find(',') >= 0:
 		    is_SUR = True 
+		    if len(self.T_TextCtrl.GetValue()) > 0:
+			self.T_TextCtrl.Clear()
+		    if len(self.S_TextCtrl.GetValue()) > 0:
+    			self.S_TextCtrl.Clear()		    
 		    self.T_TextCtrl.Disable()
 		    self.S_TextCtrl.Disable()
 		    self.T_TextCtrl.SetDropTarget(NullDropTarget(self.T_TextCtrl))
@@ -704,12 +708,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 		else:
 		    self.T_TextCtrl.Enable()
 		    self.S_TextCtrl.Enable()
-		    
-		if is_SUR:
-    		    # combo not avaible for SUR
-		    self.MT_LAGERR.Disable()
-		else:
-		    self.MT_LAGERR.Enable()
+		    self.T_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.T_TextCtrl))
+		    self.S_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.S_TextCtrl))
 		    
                 if m['modelType']['mType'] == 2 or \
                    m['modelType']['mType'] == 3:
@@ -765,7 +765,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 
 		# the matrix
                 if len(m['spec']['H']) > 0 or len(m['spec']['YE']) > 0\
-                    or m['modelType']['mType'] != 0 or is_SUR:
+                    or m['modelType']['mType'] != 0:
 		    
                     if m['modelType']['method'] == 0: #set GMM default
                         m['modelType']['method'] = 1
@@ -774,8 +774,9 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     self.OLS_radiobutton.Disable()
                     self.GMM_radiobutton.Enable()
                     self.GMM_radiobutton.SetValue(True)
+		    
                     if m['modelType']['mType'] != 3 and len(m['spec']['H']) == 0\
-                        and len(m['spec']['YE']) == 0 and is_SUR == False:
+                        and len(m['spec']['YE']) == 0 :
                         self.ML_radiobutton.Enable()
                     else:
                         self.ML_radiobutton.Disable()
@@ -796,6 +797,34 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     self.GMM_radiobutton.SetValue(False)
                     self.ML_radiobutton.Disable()
                     self.ML_radiobutton.SetValue(False)
+		    
+		if is_SUR:
+		    self.SEWhiteCheckBox.SetValue(False)
+		    self.SEHACCheckBox.SetValue(False)
+		    self.SEHETCheckBox.SetValue(False)
+		    self.SEWhiteCheckBox.Disable()
+		    self.SEHACCheckBox.Disable()
+		    self.SEHETCheckBox.Disable()
+    		    # combo not avaible for SUR
+		    self.MT_LAGERR.Disable()
+		    if len(m['spec']['H']) > 0 or len(m['spec']['YE']) > 0:
+			self.MT_ERR.Disable()
+		    else:
+			self.MT_ERR.Enable()
+		    if m['modelType']['mType'] == 2: # spatial error
+			self.ML_radiobutton.Enable()
+		    else:
+			self.ML_radiobutton.Disable()
+			self.OLS_radiobutton.Disable()
+			self.GMM_radiobutton.Enable()
+                        self.GMM_radiobutton.SetValue(True)
+		else:
+		    self.SEWhiteCheckBox.Enable()
+		    self.SEHACCheckBox.Enable()
+		    self.SEHETCheckBox.Enable()
+		    
+		    self.MT_ERR.Enable()
+		    self.MT_LAGERR.Enable()
 
 
     def setTitle(self):
