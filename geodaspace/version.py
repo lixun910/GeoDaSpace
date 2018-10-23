@@ -1,6 +1,6 @@
 import datetime
 
-version = "1.0"
+version = "1.1"
 
 def get_long_version():
     s = ""

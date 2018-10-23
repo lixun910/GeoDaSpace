@@ -348,11 +348,12 @@ class guiRegModel(abstractmodel.AbstractModel):
         x_names = data['spec']['X']
         for x_name in x_names:
             if x_name.find(',') >= 0:
-                x = None
+                x = None # get data using sur_dictxy 
                 #x.append([self.get_col(db, name) for name in x_name.split(',')])                
             else:
                 x.append(self.get_col(db, x_name))
-                x = np.array(x).T
+        if x != None:
+            x = np.array(x).T
 
         # YE
         ye = []
@@ -407,6 +408,7 @@ class guiRegModel(abstractmodel.AbstractModel):
             s = None
             name_s = None
         
+        # SUR: get data (1) HR60,HR70 (2) using Time, Space
         if name_y.find(',') >= 0:
             y_var0 = name_y.split(',')
             x_var0 = [ x_name.split(',') for x_name in x_names]
@@ -422,10 +424,10 @@ class guiRegModel(abstractmodel.AbstractModel):
             y, x, name_y, x_names = sur_dictxy(db, [name_y], [x_names], space_id=[name_s], time_id=[name_t])
             
             yend_var1 = [ name.split(',') for name in ye_names]
-            ye, ye_names = sur_dictZ(db,yend_var1)
+            ye, ye_names = sur_dictZ(db,yend_var1, form="plm", space_id=[name_s], time_id=[name_t])
             
             q_var1 = [ name.split(',') for name in h_names]
-            h, h_names = sur_dictZ(db,q_var1)              
+            h, h_names = sur_dictZ(db,q_var1, form="plm", space_id=[name_s], time_id=[name_t])              
         
         config = data['config']
 

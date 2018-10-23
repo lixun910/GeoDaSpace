@@ -304,7 +304,7 @@ class TextCtrlDropTarget(wx.TextDropTarget):
     def OnData(self, x, y, default):  # Called on drop
         self.GetData()
         text = self.text_obj.GetData()
-        self.target.Clear()
+        
 	
 	main_ui = self.target
 	while main_ui.Parent:
@@ -312,10 +312,15 @@ class TextCtrlDropTarget(wx.TextDropTarget):
 	
 	if isinstance(main_ui, geodaspace.regression.V_regression.guiRegView):
 	    if main_ui.spacetimeKeyDown:
-		if text.find(',') >= 0:
-		    # multi-variables (SUR -- e.g. HR80, HR90)
-		    self.target.SetValue(text)
-		    return default
+		# multi-variables (SUR -- e.g. HR80, HR90)
+		old_txt = self.target.GetValue()
+		old_items = old_txt.split(',') if len(old_txt) > 0 else []
+		if len(text) > 0:
+		    old_items += text.split(',')
+		new_txt = ','.join(old_items)
+		self.target.SetValue(new_txt)
+		return default
+		
         
         self.target.SetValue(text.split(',')[0])
 	if ',' in text:
@@ -366,16 +371,22 @@ class ListBoxDropTarget(wx.TextDropTarget):
                     if idx < hitidx:
                         hitidx -= 1
 				    
-	    # If hold 's' or 't' key, create time grouped variable
+	    # # multi-variables (SUR -- e.g. HR80, HR90)
 	    time_variable = False
 	    main_ui = self.targetListBox
 	    while main_ui.Parent:
 		main_ui = main_ui.Parent
 	    if isinstance(main_ui, geodaspace.regression.V_regression.guiRegView):
 		if main_ui.spacetimeKeyDown:
-		    if text.find(',') >= 0:
-			# multi-variables (SUR -- e.g. HR80, HR90)
-			self.targetListBox.InsertItems([text], hitidx)
+		    if hitidx > -1:
+			old_txt = self.targetListBox.GetString(hitidx) if hitidx < self.targetListBox.Count else ''
+			old_items = old_txt.split(',') if len(old_txt) > 0 else []
+			if len(text) > 0:
+			    old_items += text.split(',')
+			new_txt = ','.join(old_items)
+			if hitidx < self.targetListBox.Count:
+			    self.targetListBox.Delete(hitidx)
+			self.targetListBox.InsertItems([new_txt], hitidx)
 			time_variable = True
 		   
 	    if time_variable == False: 
@@ -722,6 +733,11 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     self.SEHETCheckBox.Enable()
                     self.ST_LM.Disable()
                     self.ST_LM.SetValue(False)
+		    if is_SUR and m['modelType']['mType'] == 3:
+			# combo 3 not avaible for SUR
+			self.MT_LAGERR.Disable()			
+			m['modelType']['mType'] = 2
+			self.MT_ERR.SetValue(True)
                 else:
                     self.ST_LM.Enable()
                     self.SEWhiteCheckBox.Enable()
@@ -778,6 +794,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     if m['modelType']['mType'] != 3 and len(m['spec']['H']) == 0\
                         and len(m['spec']['YE']) == 0 :
                         self.ML_radiobutton.Enable()
+			if is_SUR and m['modelType']['mType'] != 2:
+			    self.ML_radiobutton.Disable()
                     else:
                         self.ML_radiobutton.Disable()
                         self.ML_radiobutton.SetValue(False)
@@ -795,6 +813,12 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     m['modelType']['method'] = 0
                     self.GMM_radiobutton.Disable()
                     self.GMM_radiobutton.SetValue(False)
+		    if is_SUR:
+			self.GMM_radiobutton.SetValue(True)
+			self.GMM_radiobutton.Enable()
+			m['modelType']['method'] = 1
+			self.OLS_radiobutton.Disable()
+			self.OLS_radiobutton.SetValue(False)			
                     self.ML_radiobutton.Disable()
                     self.ML_radiobutton.SetValue(False)
 		    
@@ -807,10 +831,13 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 		    self.SEHETCheckBox.Disable()
     		    # combo not avaible for SUR
 		    self.MT_LAGERR.Disable()
+		    """
 		    if len(m['spec']['H']) > 0 or len(m['spec']['YE']) > 0:
 			self.MT_ERR.Disable()
+			m['modelType']['mType'] = 0 if len(m['mWeights']) == 0 else 1
 		    else:
 			self.MT_ERR.Enable()
+			
 		    if m['modelType']['mType'] == 2: # spatial error
 			self.ML_radiobutton.Enable()
 		    else:
@@ -818,6 +845,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 			self.OLS_radiobutton.Disable()
 			self.GMM_radiobutton.Enable()
                         self.GMM_radiobutton.SetValue(True)
+		    """
 		else:
 		    self.SEWhiteCheckBox.Enable()
 		    self.SEHACCheckBox.Enable()
@@ -1416,9 +1444,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 result = self.model.run(self.textFrame, predy_resid)
             except MemoryError:
                 dialog = wx.MessageDialog(
-                    self, "Your dataset is too large to perform this\
-                    computation on 32Bit. You can try running it using\
-                    the PySAL spreg library and a 64Bit version of Python",
+                    self, "Your dataset is too large to perform this computation."
                     "Memory Error:", wx.OK | wx.ICON_ERROR)
                 res = dialog.ShowModal()
                 return False

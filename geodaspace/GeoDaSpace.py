@@ -17,8 +17,8 @@ class guiApp(wx.App):
     """ Entry Point for GMM Regression GUI """
     results = []
 
-    def __init__(self, redirect=False, filename=None):
-        wx.App.__init__(self, redirect, filename)
+    #def __init__(self, redirect=False, filename=None):
+    #    wx.App.__init__(self, redirect, filename)
 
     def OnInit(self):
         # Load the Frame

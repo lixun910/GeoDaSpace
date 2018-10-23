@@ -124,6 +124,7 @@ class xrcVariablePanel(wx.Panel):
         # Define variables for the controls, bind event handlers
         self.ToolBar = xrc.XRCCTRL(self, "ToolBar")
         self.variableList = xrc.XRCCTRL(self, "variableList")
+        self.groupVariableCheckBox = xrc.XRCCTRL(self, "groupVariableCheckBox")
 
 
 
@@ -908,6 +909,12 @@ def __init_resources():
             <option>1</option>
             <flag>wxBOTTOM|wxEXPAND|wxGROW|wxSTRETCH_NOT|wxADJUST_MINSIZE</flag>
             <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="groupVariableCheckBox">
+              <label>Select as a time grouped variable</label>
+            </object>
+            <flag>wxTOP|wxBOTTOM|wxALIGN_LEFT</flag>
           </object>
         </object>
         <option>1</option>

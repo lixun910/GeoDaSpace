@@ -57,10 +57,11 @@ class VarSearchCtrl(wx.SearchCtrl):
 class vVariableSelector(wx.MiniFrame):
     #""" modified from http://wiki.wxpython.org/ListControls """
     def __init__(self, parent=None, style=wx.DEFAULT_FRAME_STYLE,
-                 size=(200, 400), values=None):
+                 size=(250, 400), values=None):
         wx.MiniFrame.__init__(self, parent=parent, style=style, size=size)
         self.panel = OGRegression_xrc.xrcVariablePanel(self)
         self.sourcelist = self.panel.variableList
+        self.groupVariableCheckBox = self.panel.groupVariableCheckBox
         self.sourcelist.Bind(wx.EVT_LIST_BEGIN_DRAG, self._startDrag)
         # self.panel.ToolBar.Bind(wx.EVT_MENU, self.spatialLag, id =
         # wx.xrc.XRCID("ToolSpatialLag"))
@@ -78,14 +79,23 @@ class vVariableSelector(wx.MiniFrame):
         self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)          
         self.sourcelist.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         self.sourcelist.Bind(wx.EVT_KEY_UP, self.OnKeyUp)        
+        self.groupVariableCheckBox.Bind(wx.EVT_CHECKBOX, self.OnGroupVarCheckBox)
 
+    def OnGroupVarCheckBox(self, event):
+        if self.groupVariableCheckBox.IsChecked():
+            self.Parent.spacetimeKeyDown = True
+        else:
+            self.Parent.spacetimeKeyDown = False
+    
     def OnKeyDown(self, event):
         keycode = event.GetKeyCode()
         if keycode == wx.WXK_ALT:
             self.Parent.spacetimeKeyDown = True
         
     def OnKeyUp(self, event):
-        self.Parent.spacetimeKeyDown = False
+        keycode = event.GetKeyCode()
+        if keycode == wx.WXK_ALT:
+            self.Parent.spacetimeKeyDown = False
         
     def Search(self, text, inclusive):
         if inclusive:
