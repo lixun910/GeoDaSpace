@@ -423,11 +423,13 @@ class guiRegModel(abstractmodel.AbstractModel):
         elif name_s and name_t and len(name_s)>0 and len(name_t) > 0:
             y, x, name_y, x_names = sur_dictxy(db, [name_y], [x_names], space_id=[name_s], time_id=[name_t])
             
-            yend_var1 = [ name.split(',') for name in ye_names]
-            ye, ye_names = sur_dictZ(db,yend_var1, form="plm", space_id=[name_s], time_id=[name_t])
-            
-            q_var1 = [ name.split(',') for name in h_names]
-            h, h_names = sur_dictZ(db,q_var1, form="plm", space_id=[name_s], time_id=[name_t])              
+            if len(ye_names) > 0:
+                yend_var1 = [ name.split(',') for name in ye_names]
+                ye, ye_names = sur_dictZ(db,yend_var1, form="plm", space_id=[name_s], time_id=[name_t])
+   
+            if len(h_names) > 0:         
+                q_var1 = [ name.split(',') for name in h_names]
+                h, h_names = sur_dictZ(db,q_var1, form="plm", space_id=[name_s], time_id=[name_t])              
         
         config = data['config']
 

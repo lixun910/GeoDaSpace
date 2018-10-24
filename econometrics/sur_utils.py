@@ -91,7 +91,9 @@ def sur_dictxy(db,y_vars,x_vars,space_id=None,time_id=None):
         longxc = np.hstack((np.ones((bign, 1)), longx))
         xvars = x_vars[0][:]
         xvars.insert(0,c)
-        
+       
+        skeys = []
+        sdict = {}
         tmpy = { t : {} for t in tt1 }
         tmpX = { t : {} for t in tt1 }
         for i in range(bign):
@@ -101,6 +103,9 @@ def sur_dictxy(db,y_vars,x_vars,space_id=None,time_id=None):
                 tmpy[tval][sval] = y[i]
             if tmpX.has_key(tval):
                 tmpX[tval][sval] = longxc[i]
+            if not sdict.has_key(sval):
+                skeys.append(sval)
+                sdict[sval] = True
         
         bigy = {}
         bigX = {}
@@ -108,8 +113,8 @@ def sur_dictxy(db,y_vars,x_vars,space_id=None,time_id=None):
         bigX_vars = {}
         for r in range(n_eq):
             tval = tt2[r]
-            bigy[r] = np.array(tmpy[tval].values())
-            bigX[r] = np.array(tmpX[tval].values())
+            bigy[r] = np.array([tmpy[tval][v] for v in skeys])
+            bigX[r] = np.array([tmpX[tval][v] for v in skeys])
             bigy_vars[r] = y_vars[0] + "_" + tt3[r]
             bigX_vars[r] = [i + "_" + tt3[r] for i in xvars]
         return (bigy,bigX,bigy_vars,bigX_vars)
