@@ -94,6 +94,7 @@ class xrcgsPrefsDialog(wx.Dialog):
         self.missingValue = xrc.XRCCTRL(self, "missingValue")
         self.SURSpatdiagnostics = xrc.XRCCTRL(self, "SURSpatdiagnostics")
         self.SURNonSpatdiagnostics = xrc.XRCCTRL(self, "SURNonSpatdiagnostics")
+        self.UseIterEstCheckBox = xrc.XRCCTRL(self, "UseIterEstCheckBox")
         self.restoreButton = xrc.XRCCTRL(self, "restoreButton")
         self.cancelButton = xrc.XRCCTRL(self, "cancelButton")
         self.saveButton = xrc.XRCCTRL(self, "saveButton")
@@ -129,7 +130,19 @@ class xrcgsPrefsDialog(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.OnButton_cancelButton, self.cancelButton)
         self.Bind(wx.EVT_BUTTON, self.OnButton_saveButton, self.saveButton)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
+        self.Bind(wx.EVT_CHECKBOX, self.OnCheckbox_SURNonSpatdiagnostics, self.SURNonSpatdiagnostics)
+        self.Bind(wx.EVT_CHECKBOX, self.OnCheckbox_SURSpatdiagnostics, self.SURSpatdiagnostics)
+        self.Bind(wx.EVT_CHECKBOX, self.OnCheckbox_UseIterEstCheckBox, self.UseIterEstCheckBox)
 
+    def OnCheckbox_SURSpatdiagnostics(self, evt):
+        print "OnCheckbox_SURSpatdiagnostics()"
+        
+    def OnCheckbox_SURNonSpatdiagnostics(self, evt):
+        print "OnCheckbox_SURNonSpatdiagnostics()"
+        
+    def OnCheckbox_UseIterEstCheckBox(self, evt):
+        print "OnCheckbox_UseIterEstCheckBox"
+        
 #!XRCED:begin-block:xrcgsPrefsDialog.OnRadiobutton_OLSNk
     def OnRadiobutton_OLSNk(self, evt):
         # Replace with event handler code
@@ -509,6 +522,19 @@ def __init_resources():
                     </object>
                     <object class="spacer"/>
                     <object class="sizeritem">
+                      <object class="wxStaticText" name="UseIterEstLabel">
+                        <label>Use Iterated Estimation (SUR only)</label>
+                      </object>
+                      <flag>wxLEFT</flag>
+                      <border>10</border>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="UseIterEstCheckBox">
+                        <checked>0</checked>
+                      </object>
+                      <flag>wxALIGN_CENTRE</flag>
+                    </object>
+                    <object class="sizeritem">
                       <object class="wxStaticText" name="MaxIterationsLabel">
                         <label>Maximum Iterations</label>
                         <XRCED>
@@ -638,7 +664,7 @@ def __init_resources():
                       <flag>wxALIGN_CENTRE</flag>
                     </object>
                     <cols>2</cols>
-                    <rows>9</rows>
+                    <rows>10</rows>
                     <vgap>5</vgap>
                     <hgap>25</hgap>
                   </object>
@@ -946,10 +972,10 @@ def __init_resources():
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
                 <object class="sizeritem">
-                  <object class="wxFlexGridSizer">
+                  <object class="wxFlexGridSizer">                    
                     <object class="sizeritem">
                       <object class="wxStaticText">
-                        <label>SUR</label>
+                        <label>Diagnostics</label>
                         <font>
                           <weight>bold</weight>
                         </font>
@@ -958,7 +984,7 @@ def __init_resources():
                     <object class="spacer"/>
                     <object class="sizeritem">
                       <object class="wxStaticText" name="SURNonSpatDiagLabel">
-                        <label>Nonspatial Diagnostics</label>
+                        <label>Nonspatial Diagnostics (SUR only)</label>
                       </object>
                       <flag>wxLEFT</flag>
                       <border>10</border>
@@ -971,27 +997,17 @@ def __init_resources():
                     </object>
                     <object class="sizeritem">
                       <object class="wxStaticText" name="SURSpatDiagLabel">
-                        <label>Spatial Diagnostics</label>
+                        <label>Spatial Diagnostics (SUR only)</label>
                       </object>
                       <flag>wxLEFT</flag>
                       <border>10</border>
                     </object>
                     <object class="sizeritem">
                       <object class="wxCheckBox" name="SURSpatdiagnostics">
-                        <checked>1</checked>
+                        <checked>0</checked>
                       </object>
                       <flag>wxALIGN_CENTRE</flag>
                     </object>
-                    
-                    <object class="sizeritem">
-                      <object class="wxStaticText">
-                        <label>Diagnostics</label>
-                        <font>
-                          <weight>bold</weight>
-                        </font>
-                      </object>
-                    </object>
-                    <object class="spacer"/>
                     <object class="sizeritem">
                       <object class="wxStaticText" name="OLSdiagnosticsLabel">
                         <label>OLS Diagnostics</label>

@@ -489,6 +489,7 @@ class guiRegModel(abstractmodel.AbstractModel):
             ml_diag=config['ml_diagnostics'],
             SUR_Spatdiagnostics=config['SURSpatdiagnostics'],
             SUR_NonSpatdiagnostics=config['SURNonSpatdiagnostics'],
+            SUR_UseIterEst=config['SURUseIterEst'],
             method=method
         ).output
         print results

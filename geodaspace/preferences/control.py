@@ -130,6 +130,7 @@ class preferencesDialog(preferences_xrc.xrcgsPrefsDialog):
         d['MLMethod'] = self.ml_method
         d['SURSpatdiagnostics'] = self.SUR_Spatdiagnostics
         d['SURNonSpatdiagnostics'] = self.SUR_NonSpatdiagnostics
+        d['UseIterEstCheckBox'] = self.SUR_UseIterEstCheckBox
 
         self.model = preferencesModel()
         self.reset_model()
@@ -430,6 +431,17 @@ class preferencesDialog(preferences_xrc.xrcgsPrefsDialog):
         elif value is not None:
             self.MLdiagnostics.SetValue(self.model.ml_diagnostics)
 
+    def SUR_UseIterEstCheckBox(self, evtName=None, evt=None, value=None):
+        if evt:
+            self.model.SURUseIterEst = self.UseIterEstCheckBox.GetValue()
+            if self.model.SURUseIterEst and self.MaxIterations.GetValue() == 1:
+                self.MaxIterations.SetValue(5)
+            elif self.model.SURUseIterEst == False and \
+                 self.MaxIterations.GetValue() == 5:
+                self.MaxIterations.SetValue(1)
+        elif value is not None:
+            self.UseIterEstCheckBox.SetValue(self.model.SURUseIterEst)
+    
     def SUR_Spatdiagnostics(self, evtName=None, evt=None, value=None):
         if evt:
             self.model.SURSpatdiagnostics = self.SURSpatdiagnostics.GetValue()

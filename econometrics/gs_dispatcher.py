@@ -150,6 +150,10 @@ class Spmodel:
     SUR_NonSpatdiagnostics     
                 : boolean
                   Run nonspatial diagnostics for SUR models
+    SUR_UseIterEst
+                : boolean
+                  Run Iterated Estimation for SUR models
+    
 
     Returns
     -------
@@ -513,7 +517,9 @@ class Spmodel:
         ols_diag, moran, white_test,
         regime_err_sep, regime_lag_sep, cores, method, 
         ml_epsilon, ml_method, ml_diag, 
-        SUR_Spatdiagnostics=False, SUR_Spatdiagnostics=False,
+        SUR_Spatdiagnostics=False, 
+        SUR_NonSpatdiagnostics=False,
+        SUR_UseIterEst=False,
         ids=None):
         
         self.name_ds = name_ds
@@ -563,6 +569,7 @@ class Spmodel:
         self.ids = ids
         self.SUR_Spatdiagnostics = SUR_Spatdiagnostics
         self.SUR_NonSpatdiagnostics = SUR_NonSpatdiagnostics
+        self.SUR_UseIterEst = SUR_UseIterEst
 
         if predy_resid:
             self.pred_res = y.reshape(y.shape[0], 1)
@@ -892,10 +899,15 @@ def get_SUR(gui):
         output = []
         for w in gui.w_list:
             reg = SUR(gui.y, gui.x, w=w, name_w=w.name, name_bigy=gui.name_y, name_bigX=gui.name_x,
-                      spat_diag=gui.spat_diag, iter=True, name_ds=gui.name_ds)
+                      spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                      iter=gui.SUR_UseIterEst, maxiter=gui.max_iter,
+                      name_ds=gui.name_ds)
             output.append(reg)
     else:
-        reg = SUR(gui.y, gui.x, name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds)
+        reg = SUR(gui.y, gui.x, name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds,
+                  spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                  iter=gui.SUR_UseIterEst, maxiter=gui.max_iter
+                  )
         output = [reg]
     return output
 
@@ -905,18 +917,20 @@ def get_SUR_regimes(gui):
         for w in gui.w_list:
             reg = SUR(gui.y, gui.x, w=w, name_w=w.name, regimes=gui.r, name_regimes=gui.name_r, 
                       name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds,
-                      spat_diag=gui.spat_diag, iter=True)
+                      spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                      iter=gui.SUR_UseIterEst, maxiter=gui.max_iter)
             output.append(reg)
     else:
         reg = SUR(gui.y, gui.x, regimes=gui.r, name_regimes=gui.name_r, 
                   name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds,
-                  spat_diag=gui.spat_diag, iter=True)        
+                  spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                  iter=gui.SUR_UseIterEst, maxiter=gui.max_iter)        
         output = [reg]    
     return output
 
 def get_SUR_endog(gui):
     # no weights support
-    reg = ThreeSLS(gui.y, gui.x, gui.ye, gui.h, 
+    reg = ThreeSLS(gui.y, gui.x, gui.ye, gui.h, nonspat_diag=gui.SUR_NonSpatdiagnostics,
                    name_bigy=gui.name_y, name_bigX=gui.name_x, 
                    name_bigyend=gui.name_ye, name_bigq=gui.name_h, name_ds=gui.name_ds)        
     output = [reg]
@@ -927,7 +941,8 @@ def get_ML_SUR_Error(gui):
     counter = 1
     for w in gui.w_list:
         reg = SURerrorML(gui.y, gui.x, w=w, name_w=w.name,
-                         spat_diag=True, nonspat_diag=True, vm=gui.vc_matrix,
+                         spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                         vm=gui.vc_matrix,
                          name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds)
         output.append(reg)
         counter += 1
@@ -939,7 +954,8 @@ def get_ML_SUR_Error_regimes(gui):
     for w in gui.w_list:
         reg = SURerrorML(gui.y, gui.x, w=w, name_w=w.name,
                          regimes=gui.r, name_regimes=gui.name_r, 
-                         spat_diag=True, nonspat_diag=True, vm=gui.vc_matrix,
+                         spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                         vm=gui.vc_matrix,
                          name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds)
         output.append(reg)
         counter += 1
@@ -950,7 +966,8 @@ def get_GM_SUR_Error(gui):
     counter = 1
     for w in gui.w_list:
         reg = SURerrorGM(gui.y, gui.x, w=w, name_w=w.name,
-                         spat_diag=True, nonspat_diag=True, vm=gui.vc_matrix,
+                         spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                         vm=gui.vc_matrix,
                          name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds)
         output.append(reg)
         counter += 1
@@ -962,7 +979,8 @@ def get_GM_SUR_Error_regimes(gui):
     for w in gui.w_list:
         reg = SURerrorGM(gui.y, gui.x, w=w, name_w=w.name,
                          regimes=gui.r, name_regimes=gui.name_r, 
-                         spat_diag=True, nonspat_diag=True, vm=gui.vc_matrix,
+                         spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                         vm=gui.vc_matrix,
                          name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds)
         output.append(reg)
         counter += 1
@@ -973,7 +991,8 @@ def get_GM_SUR_Lag_noEndog(gui):
     counter = 1
     for w in gui.w_list:
         reg = SURlagIV(gui.y, gui.x, w=w, w_lags=gui.instrument_lags, name_w=w.name, 
-                       spat_diag=True, nonspat_diag=True, vm=gui.vc_matrix,
+                       spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                       vm=gui.vc_matrix,
                        name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds)
         output.append(reg)
         counter += 1
@@ -985,7 +1004,8 @@ def get_GM_SUR_Lag_noEndog_regimes(gui):
     for w in gui.w_list:
         reg = SURlagIV(gui.y, gui.x, w=w, w_lags=gui.instrument_lags, name_w=w.name,
                        regimes=gui.r, name_regimes=gui.name_r, 
-                       spat_diag=True, nonspat_diag=True, vm=gui.vc_matrix,
+                       spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                       vm=gui.vc_matrix,
                        name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds)
         output.append(reg)
         counter += 1
@@ -997,7 +1017,8 @@ def get_GM_SUR_Lag_endog(gui):
     for w in gui.w_list:
         reg = SURlagIV(gui.y, gui.x, gui.ye, gui.h, w=w, w_lags=gui.instrument_lags, name_w=w.name,
                        lag_q=gui.lag_user_inst, 
-                       spat_diag=True, nonspat_diag=True, vm=gui.vc_matrix,
+                       spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                       vm=gui.vc_matrix,
                        name_bigy=gui.name_y, name_bigX=gui.name_x, 
                        name_bigyend=gui.name_ye, name_bigq=gui.name_h, name_ds=gui.name_ds)
         output.append(reg)
@@ -1018,7 +1039,8 @@ def get_GM_SUR_Lag_endog_regimes(gui):
         reg = SURlagIV(gui.y, gui.x, gui.ye, gui.h, w=w, w_lags=gui.instrument_lags, name_w=w.name,
                        lag_q=gui.lag_user_inst, 
                        regimes=gui.r, name_regimes=gui.name_r, 
-                       spat_diag=True, nonspat_diag=True, vm=gui.vc_matrix,
+                       spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                       vm=gui.vc_matrix,
                        name_bigy=gui.name_y, name_bigX=gui.name_x, 
                        name_bigyend=gui.name_ye, name_bigq=gui.name_h, name_ds=gui.name_ds)
         output.append(reg)
