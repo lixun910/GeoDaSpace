@@ -487,6 +487,8 @@ class guiRegModel(abstractmodel.AbstractModel):
             ml_epsilon=config['ml_epsilon'],
             ml_method=config['ml_method'],
             ml_diag=config['ml_diagnostics'],
+            SUR_Spatdiagnostics=config['SURSpatdiagnostics'],
+            SUR_NonSpatdiagnostics=config['SURNonSpatdiagnostics'],
             method=method
         ).output
         print results

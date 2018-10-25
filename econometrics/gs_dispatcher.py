@@ -144,6 +144,12 @@ class Spmodel:
                   if 'ord', use Ord's method in ML
     ml_epsilon  : float
                   Tolerance criterion for ML models          
+    SUR_Spatdiagnostics
+                : boolean
+                  Run spatial diagnostics for SUR models
+    SUR_NonSpatdiagnostics     
+                : boolean
+                  Run nonspatial diagnostics for SUR models
 
     Returns
     -------
@@ -506,7 +512,9 @@ class Spmodel:
         vc_matrix, predy_resid,
         ols_diag, moran, white_test,
         regime_err_sep, regime_lag_sep, cores, method, 
-        ml_epsilon, ml_method, ml_diag, ids=None):
+        ml_epsilon, ml_method, ml_diag, 
+        SUR_Spatdiagnostics=False, SUR_Spatdiagnostics=False,
+        ids=None):
         
         self.name_ds = name_ds
         self.w_list = w_list
@@ -553,6 +561,8 @@ class Spmodel:
         self.ml_method = ml_method.lower()
         self.ml_diag = ml_diag
         self.ids = ids
+        self.SUR_Spatdiagnostics = SUR_Spatdiagnostics
+        self.SUR_NonSpatdiagnostics = SUR_NonSpatdiagnostics
 
         if predy_resid:
             self.pred_res = y.reshape(y.shape[0], 1)

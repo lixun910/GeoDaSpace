@@ -36,7 +36,9 @@ class preferencesModel(AbstractModel):
         'regimes_regime_lag': False,
         'ml_diagnostics': False,
         'ml_epsilon': 1e-05,
-        'ml_method': 'Full'
+        'ml_method': 'Full',
+        'SURNonSpatdiagnostics': True,
+        'SURSpatdiagnostics': True
     }
     sig2n_k_other = AbstractModel.abstractProp('sig2n_k_other', bool)
     sig2n_k_ols = AbstractModel.abstractProp('sig2n_k_ols', bool)
@@ -72,6 +74,8 @@ class preferencesModel(AbstractModel):
     ml_diagnostics = AbstractModel.abstractProp('ml_diagnostics', bool)
     ml_epsilon = AbstractModel.abstractProp('ml_epsilon', float)
     ml_method = AbstractModel.abstractProp('ml_method', str)
+    SURSpatdiagnostics = AbstractModel.abstractProp('SURSpatdiagnostics', bool)
+    SURNonSpatdiagnostics = AbstractModel.abstractProp('SURNonSpatdiagnostics', bool)
 
     def __init__(self):
         AbstractModel.__init__(self)

@@ -128,6 +128,8 @@ class preferencesDialog(preferences_xrc.xrcgsPrefsDialog):
         d['MLToleranceCriterion'] = self.ml_epsilon
         d['ml_method'] = self.ml_method
         d['MLMethod'] = self.ml_method
+        d['SURSpatdiagnostics'] = self.SUR_Spatdiagnostics
+        d['SURNonSpatdiagnostics'] = self.SUR_NonSpatdiagnostics
 
         self.model = preferencesModel()
         self.reset_model()
@@ -428,6 +430,18 @@ class preferencesDialog(preferences_xrc.xrcgsPrefsDialog):
         elif value is not None:
             self.MLdiagnostics.SetValue(self.model.ml_diagnostics)
 
+    def SUR_Spatdiagnostics(self, evtName=None, evt=None, value=None):
+        if evt:
+            self.model.SURSpatdiagnostics = self.SURSpatdiagnostics.GetValue()
+        elif value is not None:
+            self.SURSpatdiagnostics.SetValue(self.model.SURSpatdiagnostics)
+            
+    def SUR_NonSpatdiagnostics(self, evtName=None, evt=None, value=None):
+        if evt:
+            self.model.SURNonSpatdiagnostics = self.SURNonSpatdiagnostics.GetValue()
+        elif value is not None:
+            self.SURNonSpatdiagnostics.SetValue(self.model.SURNonSpatdiagnostics)
+            
     def ml_epsilon(self, evtName=None, evt=None, value=None):
         if evt:
             try:

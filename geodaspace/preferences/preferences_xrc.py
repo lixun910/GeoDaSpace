@@ -92,6 +92,8 @@ class xrcgsPrefsDialog(wx.Dialog):
         self.missingValueCheck = xrc.XRCCTRL(self, "missingValueCheck")
         self.missingValueLabel = xrc.XRCCTRL(self, "missingValueLabel")
         self.missingValue = xrc.XRCCTRL(self, "missingValue")
+        self.SURSpatdiagnostics = xrc.XRCCTRL(self, "SURSpatdiagnostics")
+        self.SURNonSpatdiagnostics = xrc.XRCCTRL(self, "SURNonSpatdiagnostics")
         self.restoreButton = xrc.XRCCTRL(self, "restoreButton")
         self.cancelButton = xrc.XRCCTRL(self, "cancelButton")
         self.saveButton = xrc.XRCCTRL(self, "saveButton")
@@ -947,6 +949,42 @@ def __init_resources():
                   <object class="wxFlexGridSizer">
                     <object class="sizeritem">
                       <object class="wxStaticText">
+                        <label>SUR</label>
+                        <font>
+                          <weight>bold</weight>
+                        </font>
+                      </object>
+                    </object>
+                    <object class="spacer"/>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="SURNonSpatDiagLabel">
+                        <label>Nonspatial Diagnostics</label>
+                      </object>
+                      <flag>wxLEFT</flag>
+                      <border>10</border>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="SURNonSpatdiagnostics">
+                        <checked>1</checked>
+                      </object>
+                      <flag>wxALIGN_CENTRE</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="SURSpatDiagLabel">
+                        <label>Spatial Diagnostics</label>
+                      </object>
+                      <flag>wxLEFT</flag>
+                      <border>10</border>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="SURSpatdiagnostics">
+                        <checked>1</checked>
+                      </object>
+                      <flag>wxALIGN_CENTRE</flag>
+                    </object>
+                    
+                    <object class="sizeritem">
+                      <object class="wxStaticText">
                         <label>Diagnostics</label>
                         <font>
                           <weight>bold</weight>
@@ -1020,7 +1058,7 @@ def __init_resources():
                         </font>
                       </object>
                       <flag>wxTOP</flag>
-                      <border>15</border>
+                      <border>10</border>
                     </object>
                     <object class="spacer"/>
                     <object class="sizeritem">
@@ -1030,6 +1068,8 @@ def __init_resources():
                           <assign_var>1</assign_var>
                         </XRCED>
                       </object>
+                      <flag>wxLEFT</flag>
+                      <border>10</border>
                     </object>
                     <object class="sizeritem">
                       <object class="wxCheckBox" name="numcores">
@@ -1085,7 +1125,7 @@ def __init_resources():
                       </object>
                     </object>
                     <cols>2</cols>
-                    <rows>9</rows>
+                    <rows>12</rows>
                     <vgap>7</vgap>
                     <hgap>25</hgap>
                   </object>
