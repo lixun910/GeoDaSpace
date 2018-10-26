@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['geodaspace/GeoDaSpace.py'],
-             pathex=['/Volumes/SharedFolders/Home/Downloads/GeoDaSpace'],
+             pathex=['/Library/Python/2.7/site-packages', '/Library/Python/2.7/site-packages/PySAL-1.7.0-py2.7.egg/', '/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/', '/Users/xun/Downloads/GeoDaSpace'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -19,18 +19,18 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
-          a.binaries,
-          a.zipfiles,
-          a.datas,
           [],
+          exclude_binaries=True,
           name='GeoDaSpace',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          runtime_tmpdir=None,
-          console=False )
-app = BUNDLE(exe,
-             name='GeoDaSpace.app',
-             icon=None,
-             bundle_identifier=None)
+          console=True )
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=False,
+               upx=True,
+               name='GeoDaSpace')

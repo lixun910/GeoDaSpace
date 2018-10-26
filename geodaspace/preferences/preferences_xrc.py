@@ -1156,7 +1156,7 @@ def __init_resources():
             </object>
             <label>Other</label>
           </object>
-          <size>500,300</size>
+          <size>500,400</size>
           <XRCED>
             <assign_var>1</assign_var>
           </XRCED>

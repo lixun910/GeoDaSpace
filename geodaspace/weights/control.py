@@ -353,22 +353,27 @@ class weightsDialog(xrcDIALOGWEIGHTS):
         else:
             self.weightsNotebook.Disable()
 
+    def remove_page(self, page):
+        for pid in xrange(self.weightsNotebook.GetPageCount() - 1, - 1, - 1):
+            if self.weightsNotebook.GetPage(pid) == page:
+                self.weightsNotebook.RemovePage(pid)            
+                break
+                
     def update_style(self, flags):
         # clear the existing pages.
-        while self.weightsNotebook.GetPageCount() > 1:
-            self.weightsNotebook.RemovePage(0)
         #for pid in xrange(self.weightsNotebook.GetPageCount() - 1, - 1, - 1):
-        #    self.weightsNotebook.GetPage(pid).Reparent(self.hidden_frame)
-        #    self.weightsNotebook.RemovePage(pid)  # Note, Remove do not Delete!
-        if flags & ENABLE_CONTIGUITY_WEIGHTS:
-            self.ContiguityPanel.Reparent(self.weightsNotebook)
-            self.weightsNotebook.AddPage(*self.ContiguityPage)
-        if flags & ENABLE_DISTANCE_WEIGHTS:
-            self.DistancePanel.Reparent(self.weightsNotebook)
-            self.weightsNotebook.AddPage(*self.DistancePage)
-        if flags & ENABLE_KERNEL_WEIGHTS:
-            self.KernelPanel.Reparent(self.weightsNotebook)
-            self.weightsNotebook.AddPage(*self.KernelPage)
+            #self.weightsNotebook.GetPage(pid).Reparent(self.hidden_frame)
+            #self.weightsNotebook.RemovePage(pid)  # Note, Remove do not Delete!
+        if flags & ENABLE_CONTIGUITY_WEIGHTS == False:
+            self.ContiguityPanel.Reparent(self.hidden_frame)
+            self.remove_page(self.ContiguityPanel)
+        if flags & ENABLE_DISTANCE_WEIGHTS == False:
+            self.DistancePanel.Reparent(self.hidden_frame)
+            self.remove_page(self.DistancePanel)
+        if flags & ENABLE_KERNEL_WEIGHTS == False:
+            self.KernelPanel.Reparent(self.hidden_frame)
+            self.remove_page(self.KernelPanel)
+            
         self.weightsNotebook.SetSelection(0)
         self.cur_style = flags
 
