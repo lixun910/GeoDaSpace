@@ -468,7 +468,11 @@ class BaseThreeSLS():
         # dictionary with instruments, H
         bigH = {}
         for r in range(self.n_eq):
-            bigH[r] = sphstack(bigX[r],bigq[r])
+            try:
+                bigH[r] = sphstack(bigX[r],bigq[r])
+            except:
+                bigH[r] = sphstack(bigX[r],bigq[r][0])
+
         # dictionary with instrumental variables, X and yend_predicted, Z-hat
         bigZhat = _get_bigZhat(self, bigX, bigyend, bigH)
         self.bigZHZH,self.bigZHy = sur_crossprod(bigZhat,self.bigy)

@@ -8,8 +8,8 @@ from geodaspace import textwindow
 from geodaspace.icons import icons
 from geodaspace.regression.rc import OGRegression_xrc
 from geodaspace import weights
-from geodaspace.weights.control import ENABLE_CONTIGUITY_WEIGHTS,\
-    ENABLE_DISTANCE_WEIGHTS, ENABLE_KERNEL_WEIGHTS, WEIGHT_TYPES_FILTER,\
+from geodaspace.weights.control import ENABLE_CONTIGUITY_WEIGHTS, \
+    ENABLE_DISTANCE_WEIGHTS, ENABLE_KERNEL_WEIGHTS, WEIGHT_TYPES_FILTER, \
     WEIGHT_FILTER_TO_HANDLER
 from geodaspace import spatialLag
 from geodaspace.preferences import preferencesDialog
@@ -17,270 +17,270 @@ import variableTools
 import M_regression
 import pysal
 
-gear_png =  [
-"24 24 232 2 ",
-"   c gray11",
-".  c #262625",
-"X  c #292927",
-"o  c #3D3C36",
-"O  c #3D3D36",
-"+  c #4B4D52",
-"@  c #4C4C51",
-"#  c #4E4F52",
-"$  c #595A61",
-"%  c #595A62",
-"&  c #5C5C61",
-"*  c #5C5D65",
-"=  c #5C5D66",
-"-  c #5C5E69",
-";  c #5D5F6A",
-":  c #5C5E6D",
-">  c #5D5F6E",
-",  c #63646C",
-"<  c #64656E",
-"1  c #606274",
-"2  c #646677",
-"3  c #646678",
-"4  c #646679",
-"5  c #6F7174",
-"6  c #757573",
-"7  c #717174",
-"8  c #727274",
-"9  c #72727A",
-"0  c #78797A",
-"q  c #7A7A7E",
-"w  c #6E7181",
-"e  c #6F7182",
-"r  c #6E718C",
-"t  c #767883",
-"y  c #7B7B80",
-"u  c #7D7D82",
-"i  c #7B7C86",
-"p  c #757889",
-"a  c #7C7E88",
-"s  c #717490",
-"d  c #727593",
-"f  c #727695",
-"g  c #7A7D9A",
-"h  c #7B7E9A",
-"j  c #7A7E9D",
-"k  c #7A7F9E",
-"l  c #7B80A2",
-"z  c #7C80A1",
-"x  c #7F84A6",
-"c  c #7F84A7",
-"v  c #828489",
-"b  c #85858B",
-"n  c #8B8B8B",
-"m  c #8D8B8D",
-"M  c #838794",
-"N  c #848895",
-"B  c #8A8B91",
-"V  c #8A8A92",
-"C  c #898A95",
-"Z  c #888A96",
-"A  c #8E8F96",
-"S  c #80849F",
-"D  c #909197",
-"F  c #919197",
-"G  c #9C9D9D",
-"H  c #8185A0",
-"J  c #8186A7",
-"K  c #8388A8",
-"L  c #8489AA",
-"P  c #888CAD",
-"I  c #8E93A0",
-"U  c #9498A7",
-"Y  c #9599A7",
-"T  c #9398A8",
-"R  c #989AA9",
-"E  c #989BA9",
-"W  c #9A9DAA",
-"Q  c #9A9EAA",
-"!  c #9C9EAB",
-"~  c #999EAF",
-"^  c #9094B2",
-"/  c #9194B2",
-"(  c #9095B3",
-")  c #9397B6",
-"_  c #9398B6",
-"`  c #9599B4",
-"'  c #9498B5",
-"]  c #969AB5",
-"[  c #9599B6",
-"{  c #969AB7",
-"}  c #969BB7",
-"|  c #9A9FBA",
-" . c #9B9FBB",
-".. c #9EA0AA",
-"X. c #9FA1AD",
-"o. c #9DA1AE",
-"O. c #9BA0B0",
-"+. c #9EA4B5",
-"@. c #9FA4B6",
-"#. c #9DA1BD",
-"$. c #9DA2BD",
-"%. c #9FA3BC",
-"&. c #9FA3BD",
-"*. c #9DA2BE",
-"=. c #9EA3BF",
-"-. c #9FA4BE",
-";. c #A0A1A3",
-":. c #A5A5A6",
-">. c #A5A5A8",
-",. c #A7A7A9",
-"<. c #A6A6AA",
-"1. c #A8A8AB",
-"2. c #A9A9AD",
-"3. c #AAAAAD",
-"4. c #ACADAD",
-"5. c #A3A6B2",
-"6. c #A4A6B3",
-"7. c #A8A9B3",
-"8. c #AAADB1",
-"9. c #ABADB2",
-"0. c #ACACB3",
-"q. c #ACADB4",
-"w. c #ACAEB7",
-"e. c #A0A4B9",
-"r. c #A2A6BB",
-"t. c #A0A3BD",
-"y. c #A1A6BC",
-"u. c #A1A6BD",
-"i. c #A2A5BF",
-"p. c #A6ABBB",
-"a. c #A3A9BF",
-"s. c #A6A9BF",
-"d. c #A6ABBF",
-"f. c #AFB1BA",
-"g. c #B0B0B2",
-"h. c #B3B4B6",
-"j. c #9EA3C0",
-"k. c #9FA3C0",
-"l. c #A0A5C0",
-"z. c #A1A6C1",
-"x. c #A4A7C0",
-"c. c #A3A8C2",
-"v. c #A4A8C0",
-"b. c #A6AAC3",
-"n. c #A4A9C4",
-"m. c #A5AAC5",
-"M. c #A5ABC5",
-"N. c #A7ABC4",
-"B. c #A5ABC6",
-"V. c #A7ADC7",
-"C. c #A9ACC3",
-"Z. c #A8ADC4",
-"A. c #A9ADC5",
-"S. c #AAADC5",
-"D. c #AAAEC5",
-"F. c #AAAEC7",
-"G. c #A8ADC8",
-"H. c #A9AEC8",
-"J. c #ACB1C5",
-"K. c #AEB2C7",
-"L. c #AFB2C7",
-"P. c #ABB0C8",
-"I. c #ADB1C8",
-"U. c #ADB2C9",
-"Y. c #AFB2C8",
-"T. c #ACB1CA",
-"R. c #ACB2CC",
-"E. c #B0B5C6",
-"W. c #B7BBC6",
-"Q. c #B9BAC1",
-"!. c #B8BAC2",
-"~. c #BCBEC6",
-"^. c #BDBFC6",
-"/. c #B0B5C8",
-"(. c #B1B4C9",
-"). c #B4B6CB",
-"_. c #B2B7CF",
-"`. c #B4B7CC",
-"'. c #B9BDC9",
-"]. c #BABCCE",
-"[. c #B4B8D1",
-"{. c #B5BAD3",
-"}. c #B7BCD0",
-"|. c #BBBCD0",
-" X c #B9BED5",
-".X c #B9BED6",
-"XX c #BABFD6",
-"oX c #BABFD7",
-"OX c #BCC0D6",
-"+X c #BEC2D8",
-"@X c #C4C5CA",
-"#X c #C0C2D3",
-"$X c #C2C4D3",
-"%X c #C2C5D3",
-"&X c #C2C5D5",
-"*X c #CBCED5",
-"=X c #C1C7DD",
-"-X c #C3C7DD",
-";X c #C2C8DF",
-":X c #C6CBDC",
-">X c #C4C9DE",
-",X c #C4CADE",
-"<X c #C4CADF",
-"1X c #C5CBDF",
-"2X c #C7CDDF",
-"3X c #CBCED9",
-"4X c #CCCED9",
-"5X c #CFD1DB",
-"6X c #D0D2DC",
-"7X c #D4D6DD",
-"8X c #C3C9E0",
-"9X c #C5CBE1",
-"0X c #CDD1E2",
-"qX c #CBD1E4",
-"wX c #D1D4E0",
-"eX c #D2D5E2",
-"rX c #D4D8E5",
-"tX c #D6DAE5",
-"yX c #D4D9EA",
-"uX c #D4D9EB",
-"iX c #D7DCE8",
-"pX c #DADDEC",
-"aX c #DADFED",
-"sX c #DDE0EB",
-"dX c #DBE0EF",
-"fX c #DEE2ED",
-"gX c #DEE1EE",
-"hX c #DCE0F0",
-"jX c #DEE2F0",
-"kX c #DFE5F4",
-"lX c #DFE5F5",
-"zX c None",
-"zXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzX",
-"zXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzX",
-"zXzXzXzXzXzXzXzXzXzXzX*X7XzXzXzXzXzXzXzXzXzXzXzX",
-"zXzXzXzXzXzX<.@X1.zXzXrXpXzXzX1.@X<.zXzXzXzXzXzX",
-"zXzXzXzXzXzXq.kXOX4.h.tXiXg.,.~.jX9.zXzXzXzXzXzX",
-"zXzXzXzXzXzXzX'.sXfXjXyXuXfXsXhXW.zXzXzXzXzXzXzX",
-"zXzXzXG 3.zX<.wX:Xp.I M N Y L.qX*X..zX3.G zXzXzX",
-"zXzXzXw.pX!.wX:XU o.}.9X9XK.T o.qX5XQ.pXw.zXzXzX",
-"zXzXzXF 5.;X;X+.J.;X;X;X+X,X;Xd.e.:X;X5.A zXzXzX",
-"zXzXzXzXB }.K.r.OXOX..v b +.OXOX+.P.|.B zXzXzXzX",
-"zXzXzXzXA OXb.Z.[...8 zXzX8 E [.C.a.+XA zXzXzXzX",
-"zXzXf.6X%X[.$.N.T.y zXzXzXzXq T.P.$._.%X5X7.zXzX",
-"zXzXE d.r.m.$.m.N.y zXzXzXzX0 N.m.$.m.i.b.E zXzX",
-"zXzXzXzXi *.z.b.H.X.n zXzXm ..T.b.z.j.a zXzXzXzX",
-"zXzXzXzX9 { *.b.*.`.9.:.:.q.`.$.b.*.{ 9 zXzXzXzX",
-"zXzXzX7 C  .) C.x.{ D.&X&XD.} a.D._ | C 7 zXzXzX",
-"zXzXzXt / p H / K.(.) L L { (.I.) z p / t zXzXzX",
-"zXzXzX& , zX, h P i.].#X#X].t.P h , zX, & zXzXzX",
-"zXzXzXzXzXzXzXe l k c K J x k k w zXzXzXzXzXzXzX",
-"zXzXzXzXzXzX= z 4 % ; d d ; % 2 z & zXzXzXzXzXzX",
-"zXzXzXzXzXzX@ : + zXO r s O zX+ > # zXzXzXzXzXzX",
-"zXzXzXzXzXzXzX  zXzX. 1 4 X zXzXzXzXzXzXzXzXzXzX",
-"zXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzX",
-"zXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzX"
+gear_png = [
+    "24 24 232 2 ",
+    "   c gray11",
+    ".  c #262625",
+    "X  c #292927",
+    "o  c #3D3C36",
+    "O  c #3D3D36",
+    "+  c #4B4D52",
+    "@  c #4C4C51",
+    "#  c #4E4F52",
+    "$  c #595A61",
+    "%  c #595A62",
+    "&  c #5C5C61",
+    "*  c #5C5D65",
+    "=  c #5C5D66",
+    "-  c #5C5E69",
+    ";  c #5D5F6A",
+    ":  c #5C5E6D",
+    ">  c #5D5F6E",
+    ",  c #63646C",
+    "<  c #64656E",
+    "1  c #606274",
+    "2  c #646677",
+    "3  c #646678",
+    "4  c #646679",
+    "5  c #6F7174",
+    "6  c #757573",
+    "7  c #717174",
+    "8  c #727274",
+    "9  c #72727A",
+    "0  c #78797A",
+    "q  c #7A7A7E",
+    "w  c #6E7181",
+    "e  c #6F7182",
+    "r  c #6E718C",
+    "t  c #767883",
+    "y  c #7B7B80",
+    "u  c #7D7D82",
+    "i  c #7B7C86",
+    "p  c #757889",
+    "a  c #7C7E88",
+    "s  c #717490",
+    "d  c #727593",
+    "f  c #727695",
+    "g  c #7A7D9A",
+    "h  c #7B7E9A",
+    "j  c #7A7E9D",
+    "k  c #7A7F9E",
+    "l  c #7B80A2",
+    "z  c #7C80A1",
+    "x  c #7F84A6",
+    "c  c #7F84A7",
+    "v  c #828489",
+    "b  c #85858B",
+    "n  c #8B8B8B",
+    "m  c #8D8B8D",
+    "M  c #838794",
+    "N  c #848895",
+    "B  c #8A8B91",
+    "V  c #8A8A92",
+    "C  c #898A95",
+    "Z  c #888A96",
+    "A  c #8E8F96",
+    "S  c #80849F",
+    "D  c #909197",
+    "F  c #919197",
+    "G  c #9C9D9D",
+    "H  c #8185A0",
+    "J  c #8186A7",
+    "K  c #8388A8",
+    "L  c #8489AA",
+    "P  c #888CAD",
+    "I  c #8E93A0",
+    "U  c #9498A7",
+    "Y  c #9599A7",
+    "T  c #9398A8",
+    "R  c #989AA9",
+    "E  c #989BA9",
+    "W  c #9A9DAA",
+    "Q  c #9A9EAA",
+    "!  c #9C9EAB",
+    "~  c #999EAF",
+    "^  c #9094B2",
+    "/  c #9194B2",
+    "(  c #9095B3",
+    ")  c #9397B6",
+    "_  c #9398B6",
+    "`  c #9599B4",
+    "'  c #9498B5",
+    "]  c #969AB5",
+    "[  c #9599B6",
+    "{  c #969AB7",
+    "}  c #969BB7",
+    "|  c #9A9FBA",
+    " . c #9B9FBB",
+    ".. c #9EA0AA",
+    "X. c #9FA1AD",
+    "o. c #9DA1AE",
+    "O. c #9BA0B0",
+    "+. c #9EA4B5",
+    "@. c #9FA4B6",
+    "#. c #9DA1BD",
+    "$. c #9DA2BD",
+    "%. c #9FA3BC",
+    "&. c #9FA3BD",
+    "*. c #9DA2BE",
+    "=. c #9EA3BF",
+    "-. c #9FA4BE",
+    ";. c #A0A1A3",
+    ":. c #A5A5A6",
+    ">. c #A5A5A8",
+    ",. c #A7A7A9",
+    "<. c #A6A6AA",
+    "1. c #A8A8AB",
+    "2. c #A9A9AD",
+    "3. c #AAAAAD",
+    "4. c #ACADAD",
+    "5. c #A3A6B2",
+    "6. c #A4A6B3",
+    "7. c #A8A9B3",
+    "8. c #AAADB1",
+    "9. c #ABADB2",
+    "0. c #ACACB3",
+    "q. c #ACADB4",
+    "w. c #ACAEB7",
+    "e. c #A0A4B9",
+    "r. c #A2A6BB",
+    "t. c #A0A3BD",
+    "y. c #A1A6BC",
+    "u. c #A1A6BD",
+    "i. c #A2A5BF",
+    "p. c #A6ABBB",
+    "a. c #A3A9BF",
+    "s. c #A6A9BF",
+    "d. c #A6ABBF",
+    "f. c #AFB1BA",
+    "g. c #B0B0B2",
+    "h. c #B3B4B6",
+    "j. c #9EA3C0",
+    "k. c #9FA3C0",
+    "l. c #A0A5C0",
+    "z. c #A1A6C1",
+    "x. c #A4A7C0",
+    "c. c #A3A8C2",
+    "v. c #A4A8C0",
+    "b. c #A6AAC3",
+    "n. c #A4A9C4",
+    "m. c #A5AAC5",
+    "M. c #A5ABC5",
+    "N. c #A7ABC4",
+    "B. c #A5ABC6",
+    "V. c #A7ADC7",
+    "C. c #A9ACC3",
+    "Z. c #A8ADC4",
+    "A. c #A9ADC5",
+    "S. c #AAADC5",
+    "D. c #AAAEC5",
+    "F. c #AAAEC7",
+    "G. c #A8ADC8",
+    "H. c #A9AEC8",
+    "J. c #ACB1C5",
+    "K. c #AEB2C7",
+    "L. c #AFB2C7",
+    "P. c #ABB0C8",
+    "I. c #ADB1C8",
+    "U. c #ADB2C9",
+    "Y. c #AFB2C8",
+    "T. c #ACB1CA",
+    "R. c #ACB2CC",
+    "E. c #B0B5C6",
+    "W. c #B7BBC6",
+    "Q. c #B9BAC1",
+    "!. c #B8BAC2",
+    "~. c #BCBEC6",
+    "^. c #BDBFC6",
+    "/. c #B0B5C8",
+    "(. c #B1B4C9",
+    "). c #B4B6CB",
+    "_. c #B2B7CF",
+    "`. c #B4B7CC",
+    "'. c #B9BDC9",
+    "]. c #BABCCE",
+    "[. c #B4B8D1",
+    "{. c #B5BAD3",
+    "}. c #B7BCD0",
+    "|. c #BBBCD0",
+    " X c #B9BED5",
+    ".X c #B9BED6",
+    "XX c #BABFD6",
+    "oX c #BABFD7",
+    "OX c #BCC0D6",
+    "+X c #BEC2D8",
+    "@X c #C4C5CA",
+    "#X c #C0C2D3",
+    "$X c #C2C4D3",
+    "%X c #C2C5D3",
+    "&X c #C2C5D5",
+    "*X c #CBCED5",
+    "=X c #C1C7DD",
+    "-X c #C3C7DD",
+    ";X c #C2C8DF",
+    ":X c #C6CBDC",
+    ">X c #C4C9DE",
+    ",X c #C4CADE",
+    "<X c #C4CADF",
+    "1X c #C5CBDF",
+    "2X c #C7CDDF",
+    "3X c #CBCED9",
+    "4X c #CCCED9",
+    "5X c #CFD1DB",
+    "6X c #D0D2DC",
+    "7X c #D4D6DD",
+    "8X c #C3C9E0",
+    "9X c #C5CBE1",
+    "0X c #CDD1E2",
+    "qX c #CBD1E4",
+    "wX c #D1D4E0",
+    "eX c #D2D5E2",
+    "rX c #D4D8E5",
+    "tX c #D6DAE5",
+    "yX c #D4D9EA",
+    "uX c #D4D9EB",
+    "iX c #D7DCE8",
+    "pX c #DADDEC",
+    "aX c #DADFED",
+    "sX c #DDE0EB",
+    "dX c #DBE0EF",
+    "fX c #DEE2ED",
+    "gX c #DEE1EE",
+    "hX c #DCE0F0",
+    "jX c #DEE2F0",
+    "kX c #DFE5F4",
+    "lX c #DFE5F5",
+    "zX c None",
+    "zXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzX",
+    "zXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzX",
+    "zXzXzXzXzXzXzXzXzXzXzX*X7XzXzXzXzXzXzXzXzXzXzXzX",
+    "zXzXzXzXzXzX<.@X1.zXzXrXpXzXzX1.@X<.zXzXzXzXzXzX",
+    "zXzXzXzXzXzXq.kXOX4.h.tXiXg.,.~.jX9.zXzXzXzXzXzX",
+    "zXzXzXzXzXzXzX'.sXfXjXyXuXfXsXhXW.zXzXzXzXzXzXzX",
+    "zXzXzXG 3.zX<.wX:Xp.I M N Y L.qX*X..zX3.G zXzXzX",
+    "zXzXzXw.pX!.wX:XU o.}.9X9XK.T o.qX5XQ.pXw.zXzXzX",
+    "zXzXzXF 5.;X;X+.J.;X;X;X+X,X;Xd.e.:X;X5.A zXzXzX",
+    "zXzXzXzXB }.K.r.OXOX..v b +.OXOX+.P.|.B zXzXzXzX",
+    "zXzXzXzXA OXb.Z.[...8 zXzX8 E [.C.a.+XA zXzXzXzX",
+    "zXzXf.6X%X[.$.N.T.y zXzXzXzXq T.P.$._.%X5X7.zXzX",
+    "zXzXE d.r.m.$.m.N.y zXzXzXzX0 N.m.$.m.i.b.E zXzX",
+    "zXzXzXzXi *.z.b.H.X.n zXzXm ..T.b.z.j.a zXzXzXzX",
+    "zXzXzXzX9 { *.b.*.`.9.:.:.q.`.$.b.*.{ 9 zXzXzXzX",
+    "zXzXzX7 C  .) C.x.{ D.&X&XD.} a.D._ | C 7 zXzXzX",
+    "zXzXzXt / p H / K.(.) L L { (.I.) z p / t zXzXzX",
+    "zXzXzX& , zX, h P i.].#X#X].t.P h , zX, & zXzXzX",
+    "zXzXzXzXzXzXzXe l k c K J x k k w zXzXzXzXzXzXzX",
+    "zXzXzXzXzXzX= z 4 % ; d d ; % 2 z & zXzXzXzXzXzX",
+    "zXzXzXzXzXzX@ : + zXO r s O zX+ > # zXzXzXzXzXzX",
+    "zXzXzXzXzXzXzX  zXzX. 1 4 X zXzXzXzXzXzXzXzXzXzX",
+    "zXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzX",
+    "zXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzX"
 ]
 
 WHITE_TOOL_TIP = "White, H. (1980), Econometrica"
 HAC_TOOL_TIP = "Kelejian, H. and Prucha, I. (2007), Journal of Econometrics"
 HET_TOOL_TIP = "Kelejian, H. and Prucha, I. (2010), Journal of Econometrics"
-#ML_TOOL_TIP = "(Coming soon)"
+# ML_TOOL_TIP = "(Coming soon)"
 # R_TOOL_TIP = "Regime indicators"
 
 myEVT_LIST_BOX_UPDATE = wx.NewEventType()
@@ -291,7 +291,7 @@ class MyStringIO(StringIO.StringIO):
     def close(self):
         pass
 
-	
+
 class TextCtrlDropTarget(wx.TextDropTarget):
     def __init__(self, target):
         wx.TextDropTarget.__init__(self)
@@ -304,28 +304,27 @@ class TextCtrlDropTarget(wx.TextDropTarget):
     def OnData(self, x, y, default):  # Called on drop
         self.GetData()
         text = self.text_obj.GetData()
-        
-	
-	main_ui = self.target
-	while main_ui.Parent:
-	    main_ui = main_ui.Parent
-	
-	if isinstance(main_ui, geodaspace.regression.V_regression.guiRegView):
-	    if main_ui.spacetimeKeyDown:
-		# multi-variables (SUR -- e.g. HR80, HR90)
-		old_txt = self.target.GetValue()
-		old_items = old_txt.split(',') if len(old_txt) > 0 else []
-		if len(text) > 0:
-		    old_items += text.split(',')
-		new_txt = ','.join(old_items)
-		self.target.SetValue(new_txt)
-		return default
-		
-        
+
+        main_ui = self.target
+        while main_ui.Parent:
+            main_ui = main_ui.Parent
+
+        if isinstance(main_ui, geodaspace.regression.V_regression.guiRegView):
+            if main_ui.spacetimeKeyDown:
+                # multi-variables (SUR -- e.g. HR80, HR90)
+                old_txt = self.target.GetValue()
+                old_items = old_txt.split(',') if len(old_txt) > 0 else []
+                if len(text) > 0:
+                    old_items += text.split(',')
+                new_txt = ','.join(old_items)
+                self.target.SetValue(new_txt)
+                return default
+
         self.target.SetValue(text.split(',')[0])
-	if ',' in text:
-	    print "This field can only accept one value unless you hold the 'S' or 'T' key."
-	return default
+        if ',' in text:
+            print "This field can only accept one value unless you hold the 'S' or 'T' key."
+        return default
+
 
 class NullDropTarget(wx.TextDropTarget):
     def __init__(self, targetListBox):
@@ -370,29 +369,29 @@ class ListBoxDropTarget(wx.TextDropTarget):
                     self.targetListBox.Delete(idx)
                     if idx < hitidx:
                         hitidx -= 1
-				    
-	    # # multi-variables (SUR -- e.g. HR80, HR90)
-	    time_variable = False
-	    main_ui = self.targetListBox
-	    while main_ui.Parent:
-		main_ui = main_ui.Parent
-	    if isinstance(main_ui, geodaspace.regression.V_regression.guiRegView):
-		if main_ui.spacetimeKeyDown:
-		    if hitidx > -1:
-			old_txt = self.targetListBox.GetString(hitidx) if hitidx < self.targetListBox.Count else ''
-			old_items = old_txt.split(',') if len(old_txt) > 0 else []
-			if len(text) > 0:
-			    old_items += text.split(',')
-			new_txt = ','.join(old_items)
-			if hitidx < self.targetListBox.Count:
-			    self.targetListBox.Delete(hitidx)
-			self.targetListBox.InsertItems([new_txt], hitidx)
-			time_variable = True
-		   
-	    if time_variable == False: 
-		# Insert Drop Item(s).
-		self.targetListBox.InsertItems(itms, hitidx)
-		
+
+            # # multi-variables (SUR -- e.g. HR80, HR90)
+            time_variable = False
+            main_ui = self.targetListBox
+            while main_ui.Parent:
+                main_ui = main_ui.Parent
+            if isinstance(main_ui, geodaspace.regression.V_regression.guiRegView):
+                if main_ui.spacetimeKeyDown:
+                    if hitidx > -1:
+                        old_txt = self.targetListBox.GetString(hitidx) if hitidx < self.targetListBox.Count else ''
+                        old_items = old_txt.split(',') if len(old_txt) > 0 else []
+                        if len(text) > 0:
+                            old_items += text.split(',')
+                        new_txt = ','.join(old_items)
+                        if hitidx < self.targetListBox.Count:
+                            self.targetListBox.Delete(hitidx)
+                        self.targetListBox.InsertItems([new_txt], hitidx)
+                        time_variable = True
+
+            if time_variable == False:
+                # Insert Drop Item(s).
+                self.targetListBox.InsertItems(itms, hitidx)
+
             # Fire my custom event type
             evt = ListBoxUpdateEvent(
                 myEVT_LIST_BOX_UPDATE, self.targetListBox.GetId())
@@ -434,7 +433,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
             tmpParent = wx.Panel(drop_target_parent)
             box.Reparent(tmpParent)
             box.Reparent(drop_target_parent)
-                # moves the box to the bottom of the stack
+            # moves the box to the bottom of the stack
             tmpParent.Destroy()
         # end fix
         self.config = preferencesDialog(self)
@@ -480,9 +479,9 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 
         self.X_ListBox.SetDropTarget(ListBoxDropTarget(self.X_ListBox))
 
-	# SUR: space-time key down (Alt)
-	self.spacetimeKeyDown = False
-	
+        # SUR: space-time key down (Alt)
+        self.spacetimeKeyDown = False
+
         # The Model
         self.model = M_regression.guiRegModel()
         self.model.data['config'] = self.config.GetPrefs()
@@ -499,8 +498,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.Bind(wx.EVT_BUTTON, self.CreateKWeightsButtonClick,
                   self.CreateKWeightsButton)
         self.Bind(wx.EVT_BUTTON, self.run, self.RunButton)
-        #self.Bind(wx.EVT_BUTTON, self.saveModel, self.SaveButton)
-        #self.Bind(wx.EVT_BUTTON, self.close, self.CloseButton)
+        # self.Bind(wx.EVT_BUTTON, self.saveModel, self.SaveButton)
+        # self.Bind(wx.EVT_BUTTON, self.close, self.CloseButton)
         # self.DATAFILE.Bind(wx.EVT_COMBOBOX,self.setDataFile)
         # self.DATAFILE.Bind(wx.EVT_TEXT_ENTER,self.setDataFile)
         # self.IDVAR.Bind(wx.EVT_CHOICE,self.setIDVar)
@@ -520,7 +519,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.R_TextCtrl.Bind(wx.EVT_LEFT_DCLICK, self.clearTextBox)
         # self.R_TextCtrl.SetToolTipString(R_TOOL_TIP)
         self.S_TextCtrl.Bind(wx.EVT_TEXT, self.updateSpec)
-        self.S_TextCtrl.Bind(wx.EVT_LEFT_DCLICK,self.clearTextBox)
+        self.S_TextCtrl.Bind(wx.EVT_LEFT_DCLICK, self.clearTextBox)
         self.T_TextCtrl.Bind(wx.EVT_TEXT, self.updateSpec)
         self.T_TextCtrl.Bind(wx.EVT_LEFT_DCLICK, self.clearTextBox)
         self.X_ListBox.Bind(EVT_LIST_BOX_UPDATE, self.updateSpec)
@@ -551,7 +550,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
             wx.EVT_RADIOBUTTON, self.updateModelType)  # pas
         self.ML_radiobutton.Bind(
             wx.EVT_RADIOBUTTON, self.updateModelType)  # pas
-        #self.ML_radiobutton.SetToolTipString(ML_TOOL_TIP)
+        # self.ML_radiobutton.SetToolTipString(ML_TOOL_TIP)
 
         # self.ModelTypeRadioBox.Bind(wx.EVT_RADIOBOX, self.updateModelType)
         # self.ENDO_CHECK.Bind(wx.EVT_CHECKBOX, self.updateModelType)
@@ -568,30 +567,34 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.SEHACCheckBox.Bind(wx.EVT_CHECKBOX, self.updateModelType)
         self.SEHETCheckBox.Bind(wx.EVT_CHECKBOX, self.updateModelType)
         self.ST_LM.Bind(wx.EVT_CHECKBOX, self.updateModelType)
-	    
-	self.SetToolBar(None)
-	self.RegressionToolBar = self.CreateToolBar()
-	bmp_new = wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_OTHER)
-	bmp_open = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER)
-	bmp_save = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER)
-	bmp_saveas = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_OTHER)
-	bmp_report = wx.ArtProvider.GetBitmap(wx.ART_REPORT_VIEW, wx.ART_OTHER)
-	bmp_page = wx.ArtProvider.GetBitmap(wx.ART_HELP_PAGE, wx.ART_OTHER)
-	bmp_adv = wx.BitmapFromXPMData(gear_png)
-	
-	self.RegressionToolBar.SetToolBitmapSize((24,24))
-	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolNewModel"), bmp_new, shortHelpString='Create New Model: Choose data file')    
-	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolOpenModel"), bmp_open, shortHelpString='Open Existing Model: Choose .mdl File')    
-	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolSaveModel"), bmp_save, shortHelpString='Save Model..')    
-	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolSaveModelAs"), bmp_saveas, shortHelpString='Save Model As...')    
-	self.RegressionToolBar.AddSeparator()
-	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolVariableSelector"), bmp_report, shortHelpString='Open the Variable List')    
-	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolResultsWindow"), bmp_page, shortHelpString='Show the Results Window')    
-	self.RegressionToolBar.AddSeparator()
-	self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolAdvanced"), bmp_adv, shortHelpString='Show Advanced Settings')    
-	
-	self.RegressionToolBar.Realize()
-	
+
+        self.SetToolBar(None)
+        self.RegressionToolBar = self.CreateToolBar()
+        bmp_new = wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_OTHER)
+        bmp_open = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER)
+        bmp_save = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER)
+        bmp_saveas = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_OTHER)
+        bmp_report = wx.ArtProvider.GetBitmap(wx.ART_REPORT_VIEW, wx.ART_OTHER)
+        bmp_page = wx.ArtProvider.GetBitmap(wx.ART_HELP_PAGE, wx.ART_OTHER)
+        bmp_adv = wx.BitmapFromXPMData(gear_png)
+
+        self.RegressionToolBar.SetToolBitmapSize((24, 24))
+        self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolNewModel"), bmp_new,
+                                       shortHelpString='Create New Model: Choose data file')
+        self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolOpenModel"), bmp_open,
+                                       shortHelpString='Open Existing Model: Choose .mdl File')
+        self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolSaveModel"), bmp_save, shortHelpString='Save Model..')
+        self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolSaveModelAs"), bmp_saveas, shortHelpString='Save Model As...')
+        self.RegressionToolBar.AddSeparator()
+        self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolVariableSelector"), bmp_report,
+                                       shortHelpString='Open the Variable List')
+        self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolResultsWindow"), bmp_page,
+                                       shortHelpString='Show the Results Window')
+        self.RegressionToolBar.AddSeparator()
+        self.RegressionToolBar.AddTool(wx.xrc.XRCID("ToolAdvanced"), bmp_adv, shortHelpString='Show Advanced Settings')
+
+        self.RegressionToolBar.Realize()
+
         self.RegressionToolBar.Bind(wx.EVT_MENU, self.newModel,
                                     id=wx.xrc.XRCID("ToolNewModel"))
         self.RegressionToolBar.Bind(wx.EVT_MENU, self.openModel,
@@ -618,7 +621,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.METHOD = [
             self.OLS_radiobutton, self.GMM_radiobutton, self.ML_radiobutton]
         self.populate(None)
-	
+
     def _startDrag(self, evt):
         if evt.Dragging():
             to_drag = None
@@ -698,32 +701,32 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 #    self.YE_ListBox.Disable()
                 #    self.H_ListBox.Disable()
 
-		# SUR model for panel data    
-		is_SUR = False
-		if m['spec']['S'] and m['spec']['T'] and \
-		   len(m['spec']['S']) > 0 and len(m['spec']['T']) > 0:
-		    is_SUR = True
-		elif m['spec']['y'].find(',') >= 0:
-		    is_SUR = True 
-		    if len(self.T_TextCtrl.GetValue()) > 0:
-			self.T_TextCtrl.Clear()
-		    if len(self.S_TextCtrl.GetValue()) > 0:
-    			self.S_TextCtrl.Clear()		    
-		    self.T_TextCtrl.Disable()
-		    self.S_TextCtrl.Disable()
-		    self.T_TextCtrl.SetDropTarget(NullDropTarget(self.T_TextCtrl))
-		    self.S_TextCtrl.SetDropTarget(NullDropTarget(self.S_TextCtrl))
-		    for spec_x in m['spec']['X']:
-			if spec_x.find(',') < 0:
-			    is_SUR = False  
-		else:
-		    self.T_TextCtrl.Enable()
-		    self.S_TextCtrl.Enable()
-		    self.T_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.T_TextCtrl))
-		    self.S_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.S_TextCtrl))
-		    
+                # SUR model for panel data
+                is_SUR = False
+                if m['spec']['S'] and m['spec']['T'] and \
+                        len(m['spec']['S']) > 0 and len(m['spec']['T']) > 0:
+                    is_SUR = True
+                elif m['spec']['y'].find(',') >= 0:
+                    is_SUR = True
+                    if len(self.T_TextCtrl.GetValue()) > 0:
+                        self.T_TextCtrl.Clear()
+                    if len(self.S_TextCtrl.GetValue()) > 0:
+                        self.S_TextCtrl.Clear()
+                    self.T_TextCtrl.Disable()
+                    self.S_TextCtrl.Disable()
+                    self.T_TextCtrl.SetDropTarget(NullDropTarget(self.T_TextCtrl))
+                    self.S_TextCtrl.SetDropTarget(NullDropTarget(self.S_TextCtrl))
+                    for spec_x in m['spec']['X']:
+                        if spec_x.find(',') < 0:
+                            is_SUR = False
+                else:
+                    self.T_TextCtrl.Enable()
+                    self.S_TextCtrl.Enable()
+                    self.T_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.T_TextCtrl))
+                    self.S_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.S_TextCtrl))
+
                 if m['modelType']['mType'] == 2 or \
-                   m['modelType']['mType'] == 3:
+                        m['modelType']['mType'] == 3:
                     # an error model
                     # No White in Error Models
                     self.SEWhiteCheckBox.Disable()
@@ -733,11 +736,11 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     self.SEHETCheckBox.Enable()
                     self.ST_LM.Disable()
                     self.ST_LM.SetValue(False)
-		    if is_SUR and m['modelType']['mType'] == 3:
-			# combo 3 not avaible for SUR
-			self.MT_LAGERR.Disable()			
-			m['modelType']['mType'] = 2
-			self.MT_ERR.SetValue(True)
+                    if is_SUR and m['modelType']['mType'] == 3:
+                        # combo 3 not avaible for SUR
+                        self.MT_LAGERR.Disable()
+                        m['modelType']['mType'] = 2
+                        self.MT_ERR.SetValue(True)
                 else:
                     self.ST_LM.Enable()
                     self.SEWhiteCheckBox.Enable()
@@ -762,8 +765,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     m['config']['regimes_regime_error'] is False
 
                 # Standard or SpatialLag
-                elif m['modelType']['mType'] == 0 or\
-                   m['modelType']['mType'] == 1:
+                elif m['modelType']['mType'] == 0 or \
+                        m['modelType']['mType'] == 1:
                     self.SEHACCheckBox.Enable()
                 else:
                     self.SEHACCheckBox.SetValue(False)
@@ -779,23 +782,25 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     self.SEHACCheckBox.SetValue(False)
                     self.SEHACCheckBox.Disable()
 
-		# the matrix
-                if len(m['spec']['H']) > 0 or len(m['spec']['YE']) > 0\
-                    or m['modelType']['mType'] != 0:
-		    
-                    if m['modelType']['method'] == 0: #set GMM default
+                # the matrix
+                if len(m['spec']['H']) > 0 or len(m['spec']['YE']) > 0 \
+                        or m['modelType']['mType'] != 0:
+
+                    if m['modelType']['method'] == 0:  # set GMM default
                         m['modelType']['method'] = 1
-			
+
                     self.OLS_radiobutton.SetValue(False)
                     self.OLS_radiobutton.Disable()
                     self.GMM_radiobutton.Enable()
                     self.GMM_radiobutton.SetValue(True)
-		    
-                    if m['modelType']['mType'] != 3 and len(m['spec']['H']) == 0\
-                        and len(m['spec']['YE']) == 0 :
+
+                    if m['modelType']['mType'] != 3 and len(m['spec']['H']) == 0 \
+                            and len(m['spec']['YE']) == 0:
                         self.ML_radiobutton.Enable()
-			if is_SUR and m['modelType']['mType'] != 2:
-			    self.ML_radiobutton.Disable()
+                        if is_SUR and m['modelType']['mType'] != 2:
+                            self.ML_radiobutton.SetValue(False)
+                            self.ML_radiobutton.Disable()
+                            m['modelType']['method'] = 1
                     else:
                         self.ML_radiobutton.Disable()
                         self.ML_radiobutton.SetValue(False)
@@ -813,25 +818,25 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     m['modelType']['method'] = 0
                     self.GMM_radiobutton.Disable()
                     self.GMM_radiobutton.SetValue(False)
-		    if is_SUR:
-			self.GMM_radiobutton.SetValue(True)
-			self.GMM_radiobutton.Enable()
-			m['modelType']['method'] = 1
-			self.OLS_radiobutton.Disable()
-			self.OLS_radiobutton.SetValue(False)			
+                    if is_SUR:
+                        self.GMM_radiobutton.SetValue(True)
+                        self.GMM_radiobutton.Enable()
+                        m['modelType']['method'] = 1
+                        self.OLS_radiobutton.Disable()
+                        self.OLS_radiobutton.SetValue(False)
                     self.ML_radiobutton.Disable()
                     self.ML_radiobutton.SetValue(False)
-		    
-		if is_SUR:
-		    self.SEWhiteCheckBox.SetValue(False)
-		    self.SEHACCheckBox.SetValue(False)
-		    self.SEHETCheckBox.SetValue(False)
-		    self.SEWhiteCheckBox.Disable()
-		    self.SEHACCheckBox.Disable()
-		    self.SEHETCheckBox.Disable()
-    		    # combo not avaible for SUR
-		    self.MT_LAGERR.Disable()
-		    """
+
+                if is_SUR:
+                    self.SEWhiteCheckBox.SetValue(False)
+                    self.SEHACCheckBox.SetValue(False)
+                    self.SEHETCheckBox.SetValue(False)
+                    self.SEWhiteCheckBox.Disable()
+                    self.SEHACCheckBox.Disable()
+                    self.SEHETCheckBox.Disable()
+                    # combo not avaible for SUR
+                    self.MT_LAGERR.Disable()
+                    """
 		    if len(m['spec']['H']) > 0 or len(m['spec']['YE']) > 0:
 			self.MT_ERR.Disable()
 			m['modelType']['mType'] = 0 if len(m['mWeights']) == 0 else 1
@@ -846,14 +851,13 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 			self.GMM_radiobutton.Enable()
                         self.GMM_radiobutton.SetValue(True)
 		    """
-		else:
-		    self.SEWhiteCheckBox.Enable()
-		    self.SEHACCheckBox.Enable()
-		    self.SEHETCheckBox.Enable()
-		    
-		    self.MT_ERR.Enable()
-		    self.MT_LAGERR.Enable()
+                else:
+                    self.SEWhiteCheckBox.Enable()
+                    self.SEHACCheckBox.Enable()
+                    self.SEHETCheckBox.Enable()
 
+                    self.MT_ERR.Enable()
+                    self.MT_LAGERR.Enable()
 
     def setTitle(self):
         if self.modelFileName:
@@ -934,7 +938,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 basename = os.path.basename(oldPath)
             filter = "%s|%s" % (basename, basename)
             fileDialog = wx.FileDialog(self, message="Please locate %s" %
-                                       basename, wildcard=filter)
+                                                     basename, wildcard=filter)
             fdResult = fileDialog.ShowModal()
             if fdResult == wx.ID_OK:
                 path = fileDialog.GetPath()
@@ -1014,12 +1018,12 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                                for m in self.MODELTYPES].index(True)
 
         try:
-	    modelSetup['method'] = [m.GetValue()
-			 for m in self.METHOD].index(True)
-	except ValueError as e:
-	    print(e)
-	    modelSetup['method'] = 1
-	    pass
+            modelSetup['method'] = [m.GetValue()
+                                    for m in self.METHOD].index(True)
+        except ValueError as e:
+            print(e)
+            modelSetup['method'] = 1
+            pass
         # modelSetup['method'] = self.ml_checkbox.GetValue()
         # modelSetup['mType'] = self.ModelTypeRadioBox.GetSelection()
         # modelSetup['endogenous'] = self.EndogenousRadioBox.GetSelection()
@@ -1044,13 +1048,13 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                                   for m in self.MODELTYPES].index(True):
             self.MODELTYPES[setup['mType']].SetValue(True)
 
-	try:
+        try:
             if not setup['method'] == [m.GetValue()
-                                   for m in self.METHOD].index(True):
-	        self.METHOD[setup['method']].SetValue(True)
-	except ValueError as e:
-	    print(e)
-	    pass
+                                       for m in self.METHOD].index(True):
+                self.METHOD[setup['method']].SetValue(True)
+        except ValueError as e:
+            print(e)
+            pass
 
         if not setup['error']['white'] == self.SEWhiteCheckBox.GetValue():
             self.SEWhiteCheckBox.SetValue(setup['error']['white'])
@@ -1157,7 +1161,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 self.model.removeKW(evt.Selection)
         elif type(evt) == wx.KeyEvent:
             code = evt.GetKeyCode()
-	    selection = None
+            selection = None
             if code in [wx.WXK_BACK, wx.WXK_DELETE]:
                 selection = evt.EventObject.GetSelection()
             if evt.EventObject == self.MWeights_ListBox and selection:
@@ -1335,7 +1339,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                         fileDialog.GetFilterIndex() - 1]
                 W = pysal.open(path, 'r', handler).read()
                 W.meta = {'shape file': 'unknown', 'method':
-                          os.path.basename(path), 'savedAs': path}
+                    os.path.basename(path), 'savedAs': path}
                 assert type(W) == pysal.W
                 if target == 'model_w':
                     self.model.addMWeightsFile(obj=W)
@@ -1345,8 +1349,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 dialog = wx.MessageDialog(
                     self, "An error occurred while trying to read your weights\
                     object, please check the file: %s" %
-                    path, "Could not extract weights object:",
-                    wx.OK | wx.ICON_ERROR)
+                          path, "Could not extract weights object:",
+                          wx.OK | wx.ICON_ERROR)
                 dialog.ShowModal()
                 raise
         else:
@@ -1421,7 +1425,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 self, "The transform of %d model weights object(s) was set to\
                 \"R: Row-standardization (global sum=n)\"" % num_fixed,
                 "Model Weights Changed:",
-                wx.OK | wx.ICON_INFORMATION).ShowModal()
+                      wx.OK | wx.ICON_INFORMATION).ShowModal()
         self.model.data['config'] = self.config.GetPrefs()
         if self.config.model.output_save_pred_residuals:
             fname = self.model.data['fname']
@@ -1430,7 +1434,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
             fileDialog = wx.FileDialog(
                 self, defaultFile=suggestion, message="Save Predicted Values\
                 and Residuals As...", wildcard="*.csv", style=wx.SAVE
-                + wx.OVERWRITE_PROMPT)
+                                                              + wx.OVERWRITE_PROMPT)
             if fileDialog.ShowModal() == wx.ID_OK:
                 predy_resid = fileDialog.GetPath()
                 print predy_resid
@@ -1445,7 +1449,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
             except MemoryError:
                 dialog = wx.MessageDialog(
                     self, "Your dataset is too large to perform this computation."
-                    "Memory Error:", wx.OK | wx.ICON_ERROR)
+                          "Memory Error:", wx.OK | wx.ICON_ERROR)
                 res = dialog.ShowModal()
                 return False
             except Exception:
@@ -1453,7 +1457,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 dialog = wx.MessageDialog(
                     self, "\"%s\"\nDisplay detailed error message in results\
                     window?" % str(e), "Model Error:",
-                    wx.YES_NO | wx.ICON_ERROR)
+                          wx.YES_NO | wx.ICON_ERROR)
                 res = dialog.ShowModal()
                 if res == wx.ID_YES:
                     traceback.print_tb(tb, file=self.textFrame)
@@ -1486,8 +1490,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
             raise
         except AttributeError:
             # commonly caused by no weights.
-            if self.model.data['modelType']['error']['hac'] and not\
-               self.model.data['kWeights']:
+            if self.model.data['modelType']['error']['hac'] and not \
+                    self.model.data['kWeights']:
                 dialog = wx.MessageDialog(
                     self, "Kernel weights are required for HAC Standard\
                     Errors, please specify your kernel weights and try again.",

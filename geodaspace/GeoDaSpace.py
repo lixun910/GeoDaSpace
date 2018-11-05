@@ -48,6 +48,6 @@ def main():
 
 if __name__ == "__main__":
     """ usage: python -i main.py """
-    #app = guiApp()
-    #app.MainLoop()
+    # app = guiApp()
+    # app.MainLoop()
     main()
