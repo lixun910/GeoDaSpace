@@ -423,6 +423,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         OGRegression_xrc.xrcGMM_REGRESSION.__init__(self, parent)
         self.SendSizeEvent()
 
+        self.is_SUR = False
+
         # Linux Fix for Drag and Drop
         # wxWidgets issue #2764
         if sys.platform.startswith('linux'):
@@ -700,12 +702,12 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 #    self.H_ListBox.Disable()
 
                 # SUR model for panel data
-                is_SUR = False
+                self.is_SUR = False
                 if m['spec']['S'] and m['spec']['T'] and \
                         len(m['spec']['S']) > 0 and len(m['spec']['T']) > 0:
-                    is_SUR = True
+                    self.is_SUR = True
                 elif m['spec']['y'].find(',') >= 0:
-                    is_SUR = True
+                    self.is_SUR = True
                     if len(self.T_TextCtrl.GetValue()) > 0:
                         self.T_TextCtrl.Clear()
                     if len(self.S_TextCtrl.GetValue()) > 0:
@@ -716,7 +718,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     self.S_TextCtrl.SetDropTarget(NullDropTarget(self.S_TextCtrl))
                     for spec_x in m['spec']['X']:
                         if spec_x.find(',') < 0:
-                            is_SUR = False
+                            self.is_SUR = False
                 else:
                     self.T_TextCtrl.Enable()
                     self.S_TextCtrl.Enable()
@@ -734,7 +736,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     self.SEHETCheckBox.Enable()
                     self.ST_LM.Disable()
                     self.ST_LM.SetValue(False)
-                    if is_SUR and m['modelType']['mType'] == 3:
+                    if self.is_SUR and m['modelType']['mType'] == 3:
                         # combo 3 not avaible for SUR
                         self.MT_LAGERR.Disable()
                         m['modelType']['mType'] = 2
@@ -795,7 +797,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     if m['modelType']['mType'] != 3 and len(m['spec']['H']) == 0 \
                             and len(m['spec']['YE']) == 0:
                         self.ML_radiobutton.Enable()
-                        if is_SUR and m['modelType']['mType'] != 2:
+                        if self.is_SUR and m['modelType']['mType'] != 2:
                             self.ML_radiobutton.SetValue(False)
                             self.ML_radiobutton.Disable()
                             m['modelType']['method'] = 1
@@ -816,7 +818,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     m['modelType']['method'] = 0
                     self.GMM_radiobutton.Disable()
                     self.GMM_radiobutton.SetValue(False)
-                    if is_SUR:
+                    if self.is_SUR:
                         self.GMM_radiobutton.SetValue(True)
                         self.GMM_radiobutton.Enable()
                         m['modelType']['method'] = 1
@@ -825,7 +827,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     self.ML_radiobutton.Disable()
                     self.ML_radiobutton.SetValue(False)
 
-                if is_SUR:
+                if self.is_SUR:
                     self.SEWhiteCheckBox.SetValue(False)
                     self.SEHACCheckBox.SetValue(False)
                     self.SEHETCheckBox.SetValue(False)
@@ -1425,7 +1427,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 "Model Weights Changed:",
                       wx.OK | wx.ICON_INFORMATION).ShowModal()
         self.model.data['config'] = self.config.GetPrefs()
-        if self.config.model.output_save_pred_residuals:
+        if self.is_SUR == False and self.config.model.output_save_pred_residuals:
             fname = self.model.data['fname']
             suggestion = os.path.split(
                 fname)[1].split('.')[0] + '_predY_resid.csv'
