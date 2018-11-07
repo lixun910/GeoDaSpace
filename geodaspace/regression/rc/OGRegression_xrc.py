@@ -777,7 +777,7 @@ def __init_resources():
                 <border>3</border>
               </object>
             </object>
-            <size>570,670</size>
+            <size>570,720</size>
             <XRCED>
               <assign_var>1</assign_var>
             </XRCED>
@@ -792,7 +792,7 @@ def __init_resources():
         <assign_var>1</assign_var>
       </XRCED>
     </object>
-    <size>570,690</size>
+    <size>590,780</size>
     <title>GeoDaSpace Regression</title>
     <centered>1</centered>
     <bg>#E8E8E8</bg>

@@ -31,15 +31,15 @@ class Target(object):
 # can be very long list of things, and this will clutter too much
 # the setup call at the end of this file. So, I put all the big lists
 # here and I wrap them using the textwrap module.
-sys.path.append("C:\\windows\\Microsoft.VC90.CRT")
+sys.path.append("T:\\Downloads\\GeoDaSpace\\Microsoft.VC90.CRT")
 data_files = []
-data_files = [("", glob.glob(r"C:\Windows\Microsoft.VC90.CRT\*.*"))]
+data_files = [("", glob.glob(r"T:\\Downloads\\GeoDaSpace\\Microsoft.VC90.CRT\*.*"), glob.glob(r"T:\\Downloads\\GeoDaSpace\\deps\\OpenBLAS-0.2.17_amd64\\amd64\\bin\\libopenblaspy.dll"))]
 
-includes = ['scipy', 'scipy.integrate', 'scipy.special.*','scipy.linalg.*','numpy', 'pysal','scipy.sparse.csgraph._validation']
+includes = ['scipy','scipy.special.*','numpy', 'pysal','scipy.sparse.csgraph._validation']
 excludes = ['_gtkagg', '_tkagg', 'bsddb', 'curses', 'email', 'pywin.debugger',
             'pywin.debugger.dbgcon', 'pywin.dialogs', 'tcl',
             'Tkconstants', 'Tkinter']
-packages = ['scipy.io.matlab.streams','shapelib','dbflib','shptree','coordinator']
+packages = ['scipy.io.matlab.streams']
 dll_excludes = ['libgdk-win32-2.0-0.dll', 'libgobject-2.0-0.dll', 'tcl84.dll',
                 'tk84.dll','w9xpopen.exe']
 icon_resources = [(1,"geodaspace.ico")]
