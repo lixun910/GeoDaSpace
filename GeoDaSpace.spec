@@ -3,8 +3,8 @@
 block_cipher = None
 
 
-a = Analysis(['geodaspace/GeoDaSpace.py'],
-             pathex=['/Library/Python/2.7/site-packages', '/Library/Python/2.7/site-packages/PySAL-1.7.0-py2.7.egg/', '/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/', '/Users/xun/Downloads/GeoDaSpace'],
+a = Analysis(['geodaspace\\GeoDaSpace.py'],
+             pathex=['S:\\Downloads\\GeoDaSpace'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -26,7 +26,7 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=True )
+          console=False )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,

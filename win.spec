@@ -1,9 +1,8 @@
 # -*- mode: python -*-
 a = Analysis(['geodaspace/GeoDaSpace.py'],
-             pathex=['c:\\Users\\stephens\\Documents\\spreg\\trunk'],
+             pathex=['v:\\Downloads\\spreg'],
              hiddenimports=['scipy.special._ufuncs_cxx', 'scipy.sparse.csgraph._validation', 'scipy.io.matlab.streams'],
-             hookspath=None,
-             runtime_hooks=None)
+             hookspath=None, runtime_hooks=None)
 for d in a.datas:
     if 'pyconfig' in d[0]: 
         a.datas.remove(d)
@@ -18,4 +17,4 @@ exe = EXE(pyz,
           debug=False,
           strip=None,
           upx=True,
-          console=False , icon='geodaspace\\icons\\geodaspace.ico')
+          console=True, icon='geodaspace\\icons\\geodaspace.ico')

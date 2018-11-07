@@ -38,7 +38,8 @@ class preferencesModel(AbstractModel):
         'ml_epsilon': 1e-05,
         'ml_method': 'Full',
         'SURNonSpatdiagnostics': True,
-        'SURSpatdiagnostics': False
+        'SURSpatdiagnostics': False,
+        'SURUseIterEst': False
     }
     sig2n_k_other = AbstractModel.abstractProp('sig2n_k_other', bool)
     sig2n_k_ols = AbstractModel.abstractProp('sig2n_k_ols', bool)

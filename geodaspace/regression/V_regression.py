@@ -321,8 +321,6 @@ class TextCtrlDropTarget(wx.TextDropTarget):
                 return default
 
         self.target.SetValue(text.split(',')[0])
-        if ',' in text:
-            print "This field can only accept one value unless you hold the 'S' or 'T' key."
         return default
 
 
