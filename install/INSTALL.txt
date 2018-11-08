@@ -1,3 +1,20 @@
+[Resources]
+https://pypi.anaconda.org/carlkl/simple/numpy/
+https://pypi.anaconda.org/carlkl/simple/scipy/
+
+[Windows 32-bit]
+
+1. install Python 2.7 for x86
+2. install pip
+3. pip install numpy-1.9.1-cp27-none-win32.whl
+4. pip install scipy-0.15.1-cp27-none-win32.whl
+5. pip install PySAL==1.7.0
+6. install wxPython3.0-win32-3.0.2.0-py27
+7. install py2exe
+8. copy libopenblaspy.dll to c:\windows\system32
+8. run python setup.py.win py2exe
+9. run inno setup with build/32bit.iss
+
 [Windows 64-bit]
 
 1. install Python 2.7 for amd64

@@ -14,7 +14,7 @@ DefaultGroupName=GeoDa Software
 UninstallDisplayIcon={app}\GeoDaSpace.exe
 Compression=lzma2
 SolidCompression=yes
-OutputDir=..\..
+OutputDir=.\
 OutputBaseFilename=GeoDaSpace_setup_32bit
 ;OutputDir=userdocs:Inno Setup Examples Output
 
