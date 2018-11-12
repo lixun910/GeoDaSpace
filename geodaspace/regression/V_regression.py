@@ -836,21 +836,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                     self.SEHETCheckBox.Disable()
                     # combo not avaible for SUR
                     self.MT_LAGERR.Disable()
-                    """
-		    if len(m['spec']['H']) > 0 or len(m['spec']['YE']) > 0:
-			self.MT_ERR.Disable()
-			m['modelType']['mType'] = 0 if len(m['mWeights']) == 0 else 1
-		    else:
-			self.MT_ERR.Enable()
-			
-		    if m['modelType']['mType'] == 2: # spatial error
-			self.ML_radiobutton.Enable()
-		    else:
-			self.ML_radiobutton.Disable()
-			self.OLS_radiobutton.Disable()
-			self.GMM_radiobutton.Enable()
-                        self.GMM_radiobutton.SetValue(True)
-		    """
+
                 else:
                     self.SEWhiteCheckBox.Enable()
                     self.SEHACCheckBox.Enable()
@@ -1427,6 +1413,13 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 "Model Weights Changed:",
                       wx.OK | wx.ICON_INFORMATION).ShowModal()
         self.model.data['config'] = self.config.GetPrefs()
+
+        if (len(self.T_TextCtrl.GetValue()) > 0) ^ (len(self.S_TextCtrl.GetValue()) > 0):
+            dialog = wx.MessageDialog(
+                self, "Please select variables for both Space and Time label if specify a SUR model, or clear the Space and Time label for other models."
+                      "Input Error:", wx.OK | wx.ICON_INFORMATION).ShowModal()
+            return False
+
         if self.is_SUR == False and self.config.model.output_save_pred_residuals:
             fname = self.model.data['fname']
             suggestion = os.path.split(
@@ -1442,6 +1435,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 return
         else:
             predy_resid = None
+
         try:
             pos = self.textFrame.Text.GetLastPosition()
             try:
