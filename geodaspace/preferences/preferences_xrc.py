@@ -1004,7 +1004,7 @@ def __init_resources():
                     </object>
                     <object class="sizeritem">
                       <object class="wxCheckBox" name="SURSpatdiagnostics">
-                        <checked>0</checked>
+                        <checked>1</checked>
                       </object>
                       <flag>wxALIGN_CENTRE</flag>
                     </object>

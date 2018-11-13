@@ -905,7 +905,7 @@ def get_SUR(gui):
             output.append(reg)
     else:
         reg = SUR(gui.y, gui.x, name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds,
-                  spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                  spat_diag=False, nonspat_diag=gui.SUR_NonSpatdiagnostics,
                   iter=gui.SUR_UseIterEst, maxiter=gui.max_iter
                   )
         output = [reg]
@@ -923,7 +923,7 @@ def get_SUR_regimes(gui):
     else:
         reg = SUR(gui.y, gui.x, regimes=gui.r, name_regimes=gui.name_r, 
                   name_bigy=gui.name_y, name_bigX=gui.name_x, name_ds=gui.name_ds,
-                  spat_diag=gui.SUR_Spatdiagnostics, nonspat_diag=gui.SUR_NonSpatdiagnostics,
+                  spat_diag=False, nonspat_diag=gui.SUR_NonSpatdiagnostics,
                   iter=gui.SUR_UseIterEst, maxiter=gui.max_iter)        
         output = [reg]    
     return output
