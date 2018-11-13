@@ -424,6 +424,8 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.SendSizeEvent()
 
         self.is_SUR = False
+        self.left_down = False
+        self.dragging = False
 
         # Linux Fix for Drag and Drop
         # wxWidgets issue #2764
@@ -510,7 +512,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.X_ListBox.Bind(EVT_LIST_BOX_UPDATE, self.updateSpec)
         self.X_ListBox.Bind(wx.EVT_LISTBOX_DCLICK, self.removeSelected)
         self.X_ListBox.Bind(wx.EVT_CHAR, self.removeSelected)
-        #self.X_ListBox.Bind(wx.EVT_MOUSE_EVENTS, self._startDrag)
+        self.X_ListBox.Bind(wx.EVT_MOUSE_EVENTS, self._startDrag)
         self.YE_ListBox.Bind(EVT_LIST_BOX_UPDATE, self.updateSpec)
         self.YE_ListBox.Bind(wx.EVT_LISTBOX_DCLICK, self.removeSelected)
         self.YE_ListBox.Bind(wx.EVT_CHAR, self.removeSelected)
@@ -623,7 +625,15 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.populate(None)
 
     def _startDrag(self, evt):
-        if evt.Dragging():
+        if evt.LeftDown():
+            self.left_down = True
+        elif evt.LeftUp():
+            self.left_down = False
+            self.dragging = False
+        elif self.left_down and evt.Moving():
+            self.dragging = True
+
+        if self.dragging:
             to_drag = None
             if type(evt.EventObject) == wx.ListBox:
                 if evt.EventObject.GetSelection() != wx.NOT_FOUND:
