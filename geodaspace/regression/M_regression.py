@@ -278,7 +278,7 @@ class guiRegModel(abstractmodel.AbstractModel):
             # if lYE == 0:
             # return False,'Please add endogenous variables (YE) or disable the
             # "Endogeneity" option.'
-        if self.data['spec']['y'] and self.data['spec']['X']:
+        if len(self.data['spec']['y']) > 0 and self.data['spec']['X']:
             pass
         else:
             msg = 'Model Spec is incomplete. Please populate both X and Y'
@@ -337,11 +337,9 @@ class guiRegModel(abstractmodel.AbstractModel):
             return None
         
         # y
-        name_y = data['spec']['y']
-        if name_y.find(',') >= 0:
-            y = np.array([self.get_col(db, name) for name in name_y.split(',')]).T
-        else:
-            y = np.array([self.get_col(db, name_y)]).T
+        y_names = data['spec']['y']
+        name_y = ','.join(y_names)
+        y = np.array([self.get_col(db, name) for name in y_names]).T
 
         # x
         x = []

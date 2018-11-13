@@ -374,7 +374,7 @@ class ListBoxDropTarget(wx.TextDropTarget):
             while main_ui.Parent:
                 main_ui = main_ui.Parent
             if isinstance(main_ui, geodaspace.regression.V_regression.guiRegView):
-                if main_ui.spacetimeKeyDown:
+                if main_ui.spacetimeKeyDown and self.targetListBox.GetName() != 'Y_TextCtrl':
                     if hitidx > -1:
                         old_txt = self.targetListBox.GetString(hitidx) if hitidx < self.targetListBox.Count else ''
                         old_items = old_txt.split(',') if len(old_txt) > 0 else []
@@ -469,7 +469,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.createSpatialLag = None
 
         # Setup Drop Targets
-        self.Y_TextCtrl.SetDropTarget(TextCtrlDropTarget(self.Y_TextCtrl))
+        self.Y_TextCtrl.SetDropTarget(ListBoxDropTarget(self.Y_TextCtrl))
         self.YE_ListBox.SetDropTarget(ListBoxDropTarget(self.YE_ListBox))
         self.H_ListBox.SetDropTarget(ListBoxDropTarget(self.H_ListBox))
 
@@ -504,9 +504,13 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         # self.DATAFILE.Bind(wx.EVT_TEXT_ENTER,self.setDataFile)
         # self.IDVAR.Bind(wx.EVT_CHOICE,self.setIDVar)
 
-        self.Y_TextCtrl.Bind(wx.EVT_TEXT, self.updateSpec)
-        self.Y_TextCtrl.Bind(wx.EVT_LEFT_DCLICK, self.clearTextBox)
-        self.Y_TextCtrl.Bind(wx.EVT_CHAR, self.clearTextBox)
+        self.Y_TextCtrl.Bind(EVT_LIST_BOX_UPDATE, self.updateSpec)
+        self.Y_TextCtrl.Bind(wx.EVT_LISTBOX_DCLICK, self.removeSelected)
+        self.Y_TextCtrl.Bind(wx.EVT_CHAR, self.removeSelected)
+        self.X_ListBox.Bind(EVT_LIST_BOX_UPDATE, self.updateSpec)
+        self.X_ListBox.Bind(wx.EVT_LISTBOX_DCLICK, self.removeSelected)
+        self.X_ListBox.Bind(wx.EVT_CHAR, self.removeSelected)
+        #self.X_ListBox.Bind(wx.EVT_MOUSE_EVENTS, self._startDrag)
         self.YE_ListBox.Bind(EVT_LIST_BOX_UPDATE, self.updateSpec)
         self.YE_ListBox.Bind(wx.EVT_LISTBOX_DCLICK, self.removeSelected)
         self.YE_ListBox.Bind(wx.EVT_CHAR, self.removeSelected)
@@ -522,10 +526,6 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
         self.S_TextCtrl.Bind(wx.EVT_LEFT_DCLICK, self.clearTextBox)
         self.T_TextCtrl.Bind(wx.EVT_TEXT, self.updateSpec)
         self.T_TextCtrl.Bind(wx.EVT_LEFT_DCLICK, self.clearTextBox)
-        self.X_ListBox.Bind(EVT_LIST_BOX_UPDATE, self.updateSpec)
-        self.X_ListBox.Bind(wx.EVT_LISTBOX_DCLICK, self.removeSelected)
-        self.X_ListBox.Bind(wx.EVT_CHAR, self.removeSelected)
-        self.X_ListBox.Bind(wx.EVT_MOUSE_EVENTS, self._startDrag)
 
         # The next 2 lines are commented out to disable removing weights files.
         # TODO: the removal mechanism doesn't work with w objs, need to fix
@@ -706,7 +706,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                 if m['spec']['S'] and m['spec']['T'] and \
                         len(m['spec']['S']) > 0 and len(m['spec']['T']) > 0:
                     self.is_SUR = True
-                elif m['spec']['y'].find(',') >= 0:
+                elif len(m['spec']['y']) > 1:
                     self.is_SUR = True
                     if len(self.T_TextCtrl.GetValue()) > 0:
                         self.T_TextCtrl.Clear()
@@ -1053,7 +1053,13 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 
     def updateSpec(self, evt):
         spec = {}
-        spec['y'] = self.Y_TextCtrl.GetValue()
+
+        ## Y
+        Y = []
+        for var in self.Y_TextCtrl.GetItems():
+            if var not in Y:
+                Y.append(var)
+        spec['y'] = Y
 
         ## YE
         YE = []
@@ -1105,12 +1111,14 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 
     def setSpec(self, spec):
         # print "Setting Form Spec as... ",spec
-        if not spec['y'] == self.Y_TextCtrl.GetValue():
+        if not spec['y'] == self.Y_TextCtrl.GetItems():
             # TextCtrl.SetValue triggers an event, which interupts the form
             # update.
             self.Y_TextCtrl.SetEvtHandlerEnabled(False)
-            self.Y_TextCtrl.SetValue(spec['y'])
+            self.Y_TextCtrl.SetItems(spec['y'])
             self.Y_TextCtrl.SetEvtHandlerEnabled(True)
+        if not spec['X'] == self.X_ListBox.GetItems():
+            self.X_ListBox.SetItems(spec['X'])
         if not spec['YE'] == self.YE_ListBox.GetItems():
             self.YE_ListBox.SetItems(spec['YE'])
         if not spec['H'] == self.H_ListBox.GetItems():
@@ -1121,8 +1129,6 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
             self.S_TextCtrl.SetValue(spec['S'])
         if not spec['T'] == self.T_TextCtrl.GetValue():
             self.T_TextCtrl.SetValue(spec['T'])
-        if not spec['X'] == self.X_ListBox.GetItems():
-            self.X_ListBox.SetItems(spec['X'])
 
     def updateWeights(self, evt):
         if evt.GetEventType() == wx.EVT_CHECKLISTBOX.typeId:

@@ -373,11 +373,12 @@ def __init_resources():
                                   <flag>wxALL|wxALIGN_CENTRE|wxALIGN_CENTRE_VERTICAL|wxADJUST_MINSIZE</flag>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxTextCtrl" name="Y_TextCtrl">
+                                  <object class="wxListBox" name="Y_TextCtrl">
                                     <tooltip>Dependent Variable</tooltip>
                                     <XRCED>
                                       <assign_var>1</assign_var>
                                     </XRCED>
+                                    <size>-1,30d</size>
                                   </object>
                                   <flag>wxALL|wxEXPAND|wxGROW|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL</flag>
                                 </object>
