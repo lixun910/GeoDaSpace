@@ -309,6 +309,7 @@ class TextCtrlDropTarget(wx.TextDropTarget):
         while main_ui.Parent:
             main_ui = main_ui.Parent
 
+        print "here"
         if isinstance(main_ui, geodaspace.regression.V_regression.guiRegView):
             if main_ui.spacetimeKeyDown:
                 # multi-variables (SUR -- e.g. HR80, HR90)
@@ -321,6 +322,8 @@ class TextCtrlDropTarget(wx.TextDropTarget):
                 return default
 
         self.target.SetValue(text.split(',')[0])
+        print "here1"
+        print default
         return default
 
 
@@ -1432,7 +1435,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 
         if (len(self.T_TextCtrl.GetValue()) > 0) ^ (len(self.S_TextCtrl.GetValue()) > 0):
             dialog = wx.MessageDialog(
-                self, "Please select variables for both Space and Time label if specify a SUR model, or clear the Space and Time label for other models."
+                self, "Please select variables for both Space and Time label for SUR model, or clear the Space and Time label.",
                       "Input Error:", wx.OK | wx.ICON_INFORMATION).ShowModal()
             return False
 
