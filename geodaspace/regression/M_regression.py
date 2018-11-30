@@ -197,6 +197,7 @@ class guiRegModel(abstractmodel.AbstractModel):
         if 'fname' in self.data:
             fileType = self.data['fname'].rsplit('.')[-1].lower()
             self.fileType = fileType
+            print fileType
             if fileType == 'csv':
                 if headerOnly:
                     f = pysal.open(self.data['fname'], 'rU')
