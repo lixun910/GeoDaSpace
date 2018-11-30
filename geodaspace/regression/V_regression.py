@@ -484,7 +484,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
 
         self.X_ListBox.SetDropTarget(ListBoxDropTarget(self.X_ListBox))
 
-        # SUR: space-time key down (Alt)
+        # SUR:
         self.spacetimeKeyDown = False
 
         # The Model
@@ -951,6 +951,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
                                        wildcard="*.mdl")
             result = fileDialog.ShowModal()
             if result == wx.ID_OK:
+                self.spacetimeKeyDown = False
                 path = fileDialog.GetPath()
                 location = os.path.dirname(path)
                 f = open(path, 'r')
@@ -1378,6 +1379,7 @@ class guiRegView(OGRegression_xrc.xrcGMM_REGRESSION):
             self, message="Choose File", wildcard=filter)
         result = fileDialog.ShowModal()
         if result == wx.ID_OK:
+            self.spacetimeKeyDown = False
             path = fileDialog.GetPath()
             self.setDataFile(path)
         else:

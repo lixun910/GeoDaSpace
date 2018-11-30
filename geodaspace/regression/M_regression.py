@@ -417,7 +417,10 @@ class guiRegModel(abstractmodel.AbstractModel):
             ye, ye_names = sur_dictZ(db,yend_var1)
             
             q_var1 = [ name.split(',') for name in h_names]
-            h, h_names = sur_dictZ(db,q_var1)            
+            h, h_names = sur_dictZ(db,q_var1)
+
+            # regimes shrinks to n
+            #r = r[ : len(r) / len(y)]
         
         elif name_s and name_t and len(name_s)>0 and len(name_t) > 0:
             y, x, name_y, x_names = sur_dictxy(db, [name_y], [x_names], space_id=[name_s], time_id=[name_t])
@@ -428,7 +431,11 @@ class guiRegModel(abstractmodel.AbstractModel):
    
             if len(h_names) > 0:         
                 q_var1 = [ name.split(',') for name in h_names]
-                h, h_names = sur_dictZ(db,q_var1, form="plm", space_id=[name_s], time_id=[name_t])              
+                h, h_names = sur_dictZ(db,q_var1, form="plm", space_id=[name_s], time_id=[name_t])
+
+            # regimes shrinks to n
+            if r:
+                r = r[: len(r) / len(y)]
         
         config = data['config']
 
