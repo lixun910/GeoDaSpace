@@ -617,7 +617,10 @@ def condition_index(reg):
     eigval = np.linalg.eigvals(scale)
     max_eigval = max(eigval)
     min_eigval = min(eigval)
-    ci_result = sqrt(max_eigval / min_eigval)
+    try:
+        ci_result = sqrt(max_eigval / min_eigval)
+    except:
+        ci_result = np.nan
     return ci_result
 
 
