@@ -2,7 +2,10 @@
 pyvm/
 build/
 dist/
+.eggs/
 
+GeoDaSpace_setup_64bit.exe
+GeoDaSpace_setup_32bit.exe
 *.pyc
 *.swp
 
