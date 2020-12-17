@@ -108,3 +108,10 @@ If py2exe complains python is not found in registry, or it prompts a wrong insta
 5. wx 2.9.5.0
 
 6. run python setup.osx py2app
+
+### NOTE:
+
+There is a incompatible issue that pysal 1.5.0/1.7.0 doesn't compatible with scipy 0.14.0, specifically on the KNN weights creation feature.
+
+One way to fix is modify the pysal/weights/Distance.py and remove the call: scipy.stats._helper.unique()
+
